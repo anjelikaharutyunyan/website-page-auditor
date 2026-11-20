@@ -153,10 +153,8 @@ try {
       [blocked.ok === false && blocked.consentRequired === true && !engineBefore, "page access is refused and nothing is injected before consent"],
       [afterConsent.app && !afterConsent.notice && stored && stored.version === 1, "“Agree and continue” stores consent and opens the dashboard"],
       [allowed.ok === true, "page access works after consent"],
-      [defaults.useDebugger === false && defaults.checkExternalLinks === false && defaults.searchQueryTest === false && defaults.formInteractive === false, "screen-size emulation and the optional active checks are off by default"],
+      [defaults.interactiveTests === false && defaults.formInteractive === false && defaults.searchQueryTest === false && defaults.checkSameOriginLinks === false && defaults.checkExternalLinks === false, "optional interactive and network checks are off by default"],
     ]);
-    // The remaining scenarios cover emulation, so turn it on as a user would in Settings.
-    await bg(`handlers["qa:saveSettings"]({ settings: { useDebugger: true } })`);
   }
 
   // 1. Restricted pages are refused gracefully.
