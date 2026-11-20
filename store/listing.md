@@ -1,18 +1,18 @@
 # Chrome Web Store listing — Website Page Auditor
 
-Everything below must stay consistent with `privacy.html`, the in-product notice in `popup.html` and the extension's actual behavior. Update all of them together.
+Use this as the source of truth for the listing and dashboard disclosures. Keep it aligned with `privacy.html`, the in-product notice and extension behavior.
 
 ## Name
 
 Website Page Auditor
 
-## Short description (manifest, 130 of 132 characters)
+## Short description
 
 Audit the current page for layout, link, form, image, SEO and accessibility issues. Review findings and highlight elements to fix.
 
 ## Single purpose
 
-Audit the webpage you're viewing and help you find and review quality issues.
+Audit the webpage the user chooses and help them find and review quality issues.
 
 ## Category
 
@@ -20,74 +20,67 @@ Developer Tools
 
 ## Detailed description
 
-Website Page Auditor checks the webpage you're viewing for common quality problems and shows you exactly where they are.
+Website Page Auditor checks one webpage you choose for common quality problems and shows where they appear. Run an audit, review the findings, and highlight an element to see its location and a suggested fix.
 
-How it works
+**How it works**
+
 1. Open the webpage you want to review and click the extension icon.
-2. Read the short notice about what the extension reads, and agree to continue.
-3. Press “Check this page”, or run a single category such as Links or Forms.
-4. Review the findings, grouped as Issue found, Possible issue, Review manually and No issue found.
-5. Click a finding to highlight its element on the page and see the suggested fix.
+2. Review the data notice and agree before the extension reads the page.
+3. Choose **Check this page** or run one category.
+4. Review findings grouped by status and severity.
+5. Select a finding to highlight its element and review the evidence and suggested fix.
 
-What it checks
-• Layout: page-wide horizontal overflow, clipped or overflowing text, overlapping elements, and content hidden behind fixed headers or footers.
-• Responsive: repeats the main checks at the screen sizes you choose.
-• Images: broken, distorted, upscaled or oversized images, missing alt text and missing width/height, with a list of the page's images.
-• Links: links without a usable destination or accessible name, broken in-page anchors, malformed URLs, links covered by other elements, and broken links on the same site.
-• Interactions: controls without an accessible name, clickable-looking elements without proper semantics, and elements that can't get keyboard focus.
-• Forms: fields without labels or names, unsuitable input types, error messages not tied to their fields and interactive validation (on by default; can be turned off in Settings).
-• Search: whether the site search can be used and whether a test query returns results (on by default; can be turned off in Settings).
-• Accessibility: ARIA references, duplicate ids, page language and title, heading structure, roles, dialogs, and focusable content hidden from assistive technology.
-• Element sizes: elements wider than their parent, large empty containers, and an overview of the page's size.
-• Search appearance: page title length, H1 and H2 headings, image alt attributes, links without an address, the Google tag and the image used in link previews.
+On first installation, a welcome page introduces the workflow and privacy choices. You can open an optional exit survey from Settings before uninstalling. If you submit it, Gmail opens a draft addressed to `example@gmail.com`; the user must press Send for the publisher to receive feedback. **Replace this temporary recipient before publishing.**
 
-Inspect page
-Outline headings, tables, positioned or floated elements, external links, insecure resources and deprecated elements to review them visually.
+**Checks include**
 
-What it doesn't do
-Automated checks find common problems on one page at a time. They don't test a whole site, don't guarantee accessibility or compliance with any standard, and don't replace human review. Findings marked “Possible issue” or “Review manually” need a person to confirm them.
+- **Layout and responsive:** horizontal overflow, clipping, overlap, fixed bars, and selected viewport sizes.
+- **Images:** broken, distorted, oversized or cropped images, alt text and dimensions.
+- **Links:** missing destinations or accessible names, broken anchors, link status, and covered links.
+- **Interactions and forms:** control names, keyboard focus, labels and validation. Interactive checks are off until you enable them in Settings.
+- **Search:** search field behavior and, if enabled in Settings, a test query sent to the site's own search.
+- **Accessibility:** ARIA references, duplicate IDs, document language, title, headings, roles, dialogs, and hidden focusable content.
+- **Element sizes and search appearance:** oversized elements, page title and headings, image alt text, link preview image and related signals.
+- **Inspect page:** temporarily outline headings, tables, positioned elements, external links, insecure resources and deprecated elements.
 
-Privacy
-The extension reads a page only after you agree, and only on the tab where you use it. Findings stay in your browser and are deleted when the tab closes. Nothing is sent to the developer. Additional checks are enabled by default and can be turned off in Settings. Search checks send a real query to the site; external link checks require permission to access all sites. Privacy policy: <PRIVACY_POLICY_URL>
+**Privacy and permissions**
 
-## Privacy practices tab
+The extension reads the selected page only after you agree to the in-product notice and start a page feature. Page content and results are processed on your device and are not sent to the developer or an extension server. Findings for a tab are kept in temporary browser storage and are cleared when the tab closes or navigates to another page. Image checks may reload image URLs already referenced by the page. The optional exit survey sends only the feedback you enter to Gmail to prepare a draft; Google receives it, and the developer receives it only if you press Send. Do not include sensitive information.
+
+Optional checks that interact with the page or send requests are off by default. If enabled, same-site link checks use your existing session; test search sends your chosen query to the site and may navigate; form checks use sample values and block real submissions; tab and focus checks briefly open and close page controls. External link checks need optional site access and send cookie-free requests to linked sites.
+
+Responsive checks use Chrome's required **debugger** permission. Chrome asks for this permission when you install the extension. It is attached only to the tab being audited, only while the relevant check runs, and then detached. Chrome may show a brief debugging notice. The browser window is not resized.
+
+Automated checks find common issues on one page at a time. They do not test a whole site or guarantee accessibility or compliance with a standard; findings that need human review are labeled accordingly.
+
+## Privacy practices tab — dashboard entry guide
 
 ### Permission justifications
 
 | Permission | Justification |
 |---|---|
-| activeTab | Runs the audit on the tab where the user clicks the extension icon. |
-| scripting | Injects the audit code into that tab when the user starts a check, opens the Search appearance tab or uses an Inspect page tool. Nothing is injected automatically. |
-| storage | Keeps the current tab's findings in session storage and the user's settings and consent locally on the device. |
-| sidePanel | Lets the user keep the dashboard open in the side panel while interacting with the page. |
-| debugger | Required for responsive viewport emulation. Chrome requests it at install time; it is attached only to the audited tab while the responsive check runs. The browser window is not resized. |
-| Optional host permission `<all_urls>` | Requested when the user chooses “Allow access to this site” or clicks “Allow access to all sites” for external link checks, which send cookie-free HEAD requests to linked sites. |
-
-Remote code: No. All code is packaged with the extension.
+| `activeTab` | Grants temporary access to the tab where the user invokes the extension. |
+| `scripting` | Runs packaged audit code in that tab only after the user starts a page feature. No scripts are injected automatically. |
+| `storage` | Stores settings and consent locally, and keeps audit findings for the active tab in temporary session storage. |
+| `sidePanel` | Lets the user open the same dashboard in Chrome's side panel. |
+| `debugger` | Required for responsive viewport emulation. Chrome requests it at install time. It attaches only to the audited tab while that feature runs and is detached afterward. |
+| Optional host access `<all_urls>` | Requested only when the user allows access to a site or enables external link checks. It allows the selected checks to request pages; external link checks omit cookies. |
 
 ### Data usage
 
-Data collected: **Website content** (page text, structure, styles, links, images, form field labels and settings of the page the user chooses to audit).
+- **Data collected:** Website content from the page the user chooses, including its URL and title, visible text, structure, styles, dimensions, links, images, and form labels and settings. This content is processed locally to provide the audit and is stored locally only as described in `privacy.html`.
+- **Data not collected:** The extension does not read typed form values, passwords, cookies, browsing history across tabs, or pages the user did not choose to audit. It has no account, analytics, advertising, or developer server.
+- **Sharing:** Website content and findings are not sent to the developer or third parties. Page requests made by optional checks go only to the audited site or links the user chose to check. Optional user-entered exit feedback is passed to Gmail only when the user chooses that flow; the developer receives it only if the user sends the draft. Replace `example@gmail.com` with the monitored support address before publishing.
+- **Remote code:** No. All executable code is packaged with the extension.
+- **Limited Use certification:** Certify that website content and audit data are not sold or transferred to third parties, are not used or transferred for purposes unrelated to the extension's single purpose, and are not used or transferred to determine creditworthiness or for lending. Disclose the user-initiated Gmail feedback flow accurately in the dashboard data declarations.
 
-Not collected: personally identifiable information, health, financial and payment information, authentication information, personal communications, location, web history, user activity.
+### URLs and assets to enter
 
-Certify:
-- Data is not sold or transferred to third parties.
-- Data is not used or transferred for purposes unrelated to the single purpose.
-- Data is not used or transferred to determine creditworthiness or for lending purposes.
+- **Privacy policy URL (required):** Publish `privacy.html` at a stable, publicly accessible HTTPS URL and enter that URL in the dashboard. For this repository, a candidate URL after enabling GitHub Pages for the `main` branch is `https://anjelikaharutyunyan.github.io/website-page-auditor/privacy.html`. Confirm that it loads publicly before entering it. The copy inside the extension is not a substitute for this dashboard field.
+- **Support URL (recommended):** Add a public support or issue-report page that you monitor.
+- **Website URL (recommended):** Add a public product or project page if one is available.
+- **Store icon:** `icons/store-icon-128.png` (128 × 128 PNG).
+- **Small promotional tile:** `store/promo-tile-440x280.png` (440 × 280 PNG; required by the current listing workflow).
+- **Screenshots:** Upload up to five current, actual product screenshots at 1280 × 800. Refresh them with `npm run screenshots:store` before submission.
 
-Website content is processed only in the user's browser and is never transmitted to the developer.
-
-Privacy policy URL: host `privacy.html` (it ships inside the extension too) and enter its address here.
-
-## Screenshots (1280×800)
-
-Generated from the real extension by `npm run test:extension` into `store/screenshots/`:
-
-1. `1-page-audit.png` — a completed audit on the Page audit tab with findings grouped by status.
-2. `2-finding-details.png` — an expanded finding with its location, details and suggested fix.
-3. `3-highlighted-element.png` — the page with the finding's element highlighted.
-4. `4-search-appearance.png` — the Search appearance tab with its summary and results.
-5. `5-settings-disclosures.png` — Settings showing the optional checks and responsive viewport options.
-
-Before submitting, check that each screenshot still matches the current interface.
+Do not submit until the public policy URL is live and the screenshots have been refreshed from the current extension. Do not upload mockups as product screenshots.

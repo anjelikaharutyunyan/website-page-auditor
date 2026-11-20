@@ -25,12 +25,12 @@ const CATEGORY_ORDER = ["layout", "images", "links", "interactions", "forms", "s
 const CATEGORY_TIMEOUT_MS = 90000;
 
 const DEFAULT_SETTINGS = {
-  interactiveTests: true,
-  formInteractive: true,
-  searchQueryTest: true,
+  interactiveTests: false,
+  formInteractive: false,
+  searchQueryTest: false,
   searchQuery: "test",
-  checkSameOriginLinks: true,
-  checkExternalLinks: true,
+  checkSameOriginLinks: false,
+  checkExternalLinks: false,
   maxLinkChecks: 40,
   maxPerTest: 25,
   viewports: U.VIEWPORT_PRESETS.map((v) => v.id),
@@ -662,12 +662,6 @@ const handlers = {
       return { ok: true };
     }).catch((e) => ({ ok: false, message: friendlyAccessError(e) }));
   },
-  async "qa:captureFindings"({ tabId, targets }) {
-    const live = scans.get(tabId);
-    if (live && live.status === "running") return { ok: false, message: msg("uiScanAlreadyRunning") };
-    await ensureEngine(tabId);
-    return { ok: true, ...(await captureFindings(tabId, targets || [])) };
-  },
   async "qa:visualAid"({ tabId, tool, on }) {
     const res = await visualAid(tabId, tool, on);
     const key = `aids:${tabId}`;
@@ -716,145 +710,6 @@ const handlers = {
     return { ok: true, accepted: false };
   },
 };
-
-// ---------------------------------------------------------------- screenshots for the PDF report
-
-const SHOT = { pad: 24, minWidth: 360, minHeight: 160, maxWidth: 1000, maxHeight: 800, quality: 0.8 };
-// Chrome allows two captureVisibleTab calls per second.
-const CAPTURE_INTERVAL_MS = 600;
-let lastCapture = 0;
-
-// The element plus some surrounding context, clamped to the visible viewport (CSS pixels).
-function shotRegion(f) {
-  const span = (a, b, min, max) => {
-    const grow = min - (b - a);
-    if (grow > 0) {
-      a -= grow / 2;
-      b += grow / 2;
-    }
-    if (a < 0) {
-      b -= a;
-      a = 0;
-    }
-    if (b > max) {
-      a -= b - max;
-      b = max;
-    }
-    return [Math.max(0, a), Math.min(max, b)];
-  };
-  const r = f.rect;
-  const [x1, x2] = span(r.left - SHOT.pad, r.left + r.width + SHOT.pad, SHOT.minWidth, f.clientWidth);
-  const [y1, y2] = span(r.top - SHOT.pad, r.top + r.height + SHOT.pad, SHOT.minHeight, f.clientHeight);
-  return { x: Math.round(x1), y: Math.round(y1), width: Math.round(x2 - x1), height: Math.round(y2 - y1) };
-}
-
-function outputScale(region, pixelRatio) {
-  return Math.min(1, SHOT.maxWidth / (region.width * pixelRatio), SHOT.maxHeight / (region.height * pixelRatio));
-}
-
-async function blobToDataUrl(blob) {
-  const bytes = new Uint8Array(await blob.arrayBuffer());
-  let s = "";
-  for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
-  return `data:${blob.type};base64,${btoa(s)}`;
-}
-
-async function captureVisible(windowId, f, region) {
-  const wait = lastCapture + CAPTURE_INTERVAL_MS - Date.now();
-  if (wait > 0) await new Promise((r) => setTimeout(r, wait));
-  lastCapture = Date.now();
-  const url = await chrome.tabs.captureVisibleTab(windowId, { format: "png" });
-  const bmp = await createImageBitmap(await (await fetch(url)).blob());
-  const px = bmp.width / f.viewportWidth;
-  const k = outputScale(region, px);
-  const w = Math.max(1, Math.round(region.width * px * k));
-  const h = Math.max(1, Math.round(region.height * px * k));
-  const canvas = new OffscreenCanvas(w, h);
-  canvas.getContext("2d").drawImage(bmp, region.x * px, region.y * px, region.width * px, region.height * px, 0, 0, w, h);
-  bmp.close();
-  return blobToDataUrl(await canvas.convertToBlob({ type: "image/jpeg", quality: SHOT.quality }));
-}
-
-async function captureWithDebugger(tabId, f, region) {
-  const clip = { x: region.x + f.scrollX, y: region.y + f.scrollY, width: region.width, height: region.height, scale: outputScale(region, f.dpr) };
-  const res = await withTimeout(chrome.debugger.sendCommand({ tabId }, "Page.captureScreenshot", { format: "jpeg", quality: Math.round(SHOT.quality * 100), clip }), 10000, "Page.captureScreenshot");
-  return `data:image/jpeg;base64,${res.data}`;
-}
-
-// Highlights each finding's element and photographs it. captureVisibleTab needs the tab to be in front and
-// activeTab or all-sites access; otherwise the debugger (already used for responsive checks) takes the picture.
-// Findings measured at another screen size are photographed with that size emulated again, like the
-// responsive check, and the page is restored afterwards.
-async function captureFindings(tabId, targets) {
-  const tab = await chrome.tabs.get(tabId);
-  const frame = (t) => exec(tabId, (target, severity, parentIfHidden) => window.__webQA.inspector.frame(target, severity, parentIfHidden), [t.target, t.severity, !!t.viewport], 10000).catch(() => null);
-  const send = (cmd, params) => chrome.debugger.sendCommand({ tabId }, cmd, params);
-  const sizeKey = (t) => (t.viewport ? `${String(t.viewport.width).padStart(5, "0")}x${t.viewport.height}` : "");
-  const shots = {};
-  let useTab = tab.active;
-  let attached = false;
-  let emulated = "";
-  const attach = async () => {
-    if (attached) return true;
-    attached = !!debuggerApi() && (await chrome.debugger.attach({ tabId }, "1.3").then(() => true).catch(() => false));
-    // Chrome's "started debugging" bar can change the viewport height.
-    if (attached) await new Promise((r) => setTimeout(r, 300));
-    return attached;
-  };
-  const emulate = async (vp) => {
-    const key = vp ? `${vp.width}x${vp.height}` : "";
-    if (key === emulated) return true;
-    if (vp) {
-      if (!(await attach())) return false;
-      await markEmulating(tabId, true);
-      await send("Emulation.setDeviceMetricsOverride", { width: vp.width, height: vp.height, deviceScaleFactor: 0, mobile: !!vp.mobile, screenWidth: vp.width, screenHeight: vp.height });
-      await send("Emulation.setTouchEmulationEnabled", { enabled: !!vp.mobile, maxTouchPoints: vp.mobile ? 5 : 1 });
-    } else {
-      await send("Emulation.clearDeviceMetricsOverride").catch(() => {});
-      await send("Emulation.setTouchEmulationEnabled", { enabled: false }).catch(() => {});
-      await markEmulating(tabId, false);
-    }
-    emulated = key;
-    await exec(tabId, () => window.__webQA.waitForLayout(500), [], 5000).catch(() => {});
-    return true;
-  };
-  // Current-size findings first, then one emulated size at a time.
-  const ordered = targets.slice(0, 200).sort((a, b) => sizeKey(a).localeCompare(sizeKey(b)));
-  try {
-    for (const t of ordered) {
-      if (t.viewport) {
-        if (!(await emulate(t.viewport).catch(() => false))) continue;
-        const f = await frame(t);
-        if (!f || !f.ok) continue;
-        const image = await captureWithDebugger(tabId, f, shotRegion(f)).catch(() => null);
-        if (image) shots[t.id] = image;
-        continue;
-      }
-      let f = await frame(t);
-      if (!f || !f.ok) continue;
-      let image = null;
-      if (useTab) {
-        image = await captureVisible(tab.windowId, f, shotRegion(f)).catch(() => null);
-        if (!image) useTab = false;
-      }
-      if (!image) {
-        const wasAttached = attached;
-        if (!(await attach())) break;
-        if (!wasAttached) {
-          f = await frame(t);
-          if (!f || !f.ok) continue;
-        }
-        image = await captureWithDebugger(tabId, f, shotRegion(f)).catch(() => null);
-      }
-      if (image) shots[t.id] = image;
-    }
-  } finally {
-    if (emulated) await emulate(null).catch(() => {});
-    if (attached) await chrome.debugger.detach({ tabId }).catch(() => {});
-    await exec(tabId, () => window.__webQA && window.__webQA.inspector.clear(), [], 5000).catch(() => {});
-  }
-  return { shots, method: attached ? "debugger" : "tab" };
-}
 
 // Nothing reads a page until the user has agreed to the in-product data notice.
 const CONSENT_KEY = "consent";
@@ -918,8 +773,11 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   chrome.storage.session.remove([`report:${tabId}`, `scan:${tabId}`, `aids:${tabId}`, `seo:${tabId}`]).catch(() => {});
 });
 
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener((details) => {
   // Clear the uninstall URL registered by older versions; Chrome keeps it until explicitly reset.
   chrome.runtime.setUninstallURL("");
+  if (details.reason === "install") {
+    chrome.tabs.create({ url: chrome.runtime.getURL("welcome.html") }).catch(() => {});
+  }
   if (chrome.sidePanel && chrome.sidePanel.setPanelBehavior) chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false }).catch(() => {});
 });

@@ -6,6 +6,7 @@
   "scripts": {
     "test": "node --test \"tests/unit/*.test.js\"",
     "test:browser": "node tests/browser/run-harness.mjs",
-    "test:extension": "node tests/browser/run-extension.mjs"
+    "test:extension": "node tests/browser/run-extension.mjs",
+    "screenshots:store": "node tests/browser/run-extension.mjs --screenshots-only"
   }
 }

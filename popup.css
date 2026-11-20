@@ -265,20 +265,8 @@ table.kv td { font-family: ui-monospace, Consolas, monospace; word-break: break-
 .export-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #e5e7eb; }
 .select-all { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--gray-600); cursor: pointer; }
 
-/* Selecting findings for the PDF report */
 .result-row { display: flex; align-items: flex-start; min-width: 0; }
 .result-row .result-head { flex: 1 1 auto; min-width: 0; }
-.result-row .pick { flex: none; margin: 10px 0 0 8px; cursor: pointer; }
-.tab-count { display: inline-block; min-width: 18px; padding: 0 5px; margin-left: 2px; border-radius: 99px; background: var(--primary); color: #fff; font-size: 10.5px; text-align: center; }
-.pdf-page .count { background: var(--primary); }
-.pdf-page-url { font-size: 11px; color: var(--gray-400); overflow-wrap: anywhere; margin: 0 0 4px; }
-.pdf-page .result-head { align-items: center; }
-.pdf-shot { padding: 0 8px 8px; }
-.pdf-thumb { display: block; max-width: 100%; max-height: 96px; border: 1px solid #e5e7eb; border-radius: 4px; }
-.pdf-status-failed { background: #fef2f2; color: #991b1b; }
-.pdf-status-warning { background: #fffbeb; color: #92400e; }
-.pdf-status-manual { background: #f5f3ff; color: #5b21b6; }
-.pdf-status-passed { background: #ecfdf5; color: #065f46; }
 
 /* Images */
 .table-scroll { overflow: auto; max-height: 420px; }

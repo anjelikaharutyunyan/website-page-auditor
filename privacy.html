@@ -3,87 +3,103 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Privacy policy for Website Page Auditor, a Chrome extension that audits the webpage you choose.">
   <title>Privacy policy – Website Page Auditor</title>
   <style>
-    body { font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #111827; margin: 0; background: #f9fafb; }
-    main { max-width: 760px; margin: 0 auto; padding: 32px 24px 48px; background: #fff; }
-    h1 { font-size: 24px; margin: 0 0 4px; }
-    h2 { font-size: 18px; margin: 28px 0 8px; }
-    .updated { color: #4b5563; margin: 0 0 20px; }
+    body { font: 15px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #111827; margin: 0; background: #f3f6fb; }
+    main { max-width: 800px; margin: 0 auto; padding: 36px 24px 56px; background: #fff; min-height: 100vh; box-sizing: border-box; }
+    h1 { font-size: 28px; line-height: 1.2; margin: 0 0 6px; }
+    h2 { font-size: 19px; margin: 30px 0 8px; }
+    .updated { color: #4b5563; margin: 0 0 22px; }
     table { border-collapse: collapse; width: 100%; font-size: 14px; }
-    th, td { border: 1px solid #e5e7eb; padding: 6px 8px; text-align: left; vertical-align: top; }
-    th { background: #f9fafb; font-weight: 600; }
-    code { font: 13px ui-monospace, Consolas, monospace; background: #f3f4f6; padding: 0 4px; border-radius: 4px; }
+    th, td { border: 1px solid #dbe2ea; padding: 8px 10px; text-align: left; vertical-align: top; }
+    th { background: #f3f6fb; font-weight: 600; }
+    code { font: 13px ui-monospace, Consolas, monospace; background: #eef2f7; padding: 1px 4px; border-radius: 4px; }
+    a { color: #155eef; }
   </style>
 </head>
 <body>
 <main>
   <h1>Privacy policy</h1>
-  <p class="updated">Website Page Auditor · Last updated: October 14, 2026</p>
+  <p class="updated">Website Page Auditor · Last updated: November 20, 2026</p>
 
-  <p>Website Page Auditor has a single purpose: audit the webpage you're viewing and help you find and review quality issues. This policy explains what the extension reads, where that information goes, and which network requests it makes. It describes the extension's actual behavior; if the behavior changes, this policy is updated first.</p>
+  <p>Website Page Auditor has one purpose: audit the webpage you choose and help you find and review quality issues. This policy explains what the extension reads, how it uses and stores that information, and which requests optional checks make. The extension follows the Chrome Web Store User Data Policy, including its Limited Use requirements: website content is used only to provide the auditing features described here, and is not sold or transferred for unrelated purposes.</p>
 
   <h2>Summary</h2>
   <ul>
-    <li>The extension reads a webpage only after you agree to the in-product notice, and only on the tab where you use it.</li>
-    <li>Findings stay in your browser. They are never sent to the developer or to any other server.</li>
-    <li>There are no accounts, analytics, advertising, tracking or remote code.</li>
-    <li>Data is not sold, transferred to third parties, or used for any purpose other than showing you the audit.</li>
+    <li>The extension reads a page only after you accept its in-product notice and use a page feature on that tab.</li>
+    <li>Page content and audit findings are processed on your device. They are not sent to the developer, an extension server, or an analytics service.</li>
+    <li>There are no accounts, analytics, advertising, tracking, or remotely hosted executable code.</li>
+    <li>Website content is not sold or shared. If you choose the exit survey, only the feedback you enter is passed to Gmail so you can prepare an email.</li>
   </ul>
 
-  <h2>What the extension reads</h2>
-  <p>When you check a page, open the Search appearance tab or use an Inspect page tool, the extension reads the following from that page (Chrome Web Store category: <b>website content</b>):</p>
+  <h2>Information the extension reads</h2>
+  <p>After you agree to the notice, the extension reads content from the tab where you use a page feature. This is website content under the Chrome Web Store data categories and may include:</p>
   <ul>
-    <li>the page address (URL) and title;</li>
-    <li>visible text, the HTML structure, computed styles and element sizes and positions;</li>
-    <li>links, images and their addresses, and meta tags such as <code>og:image</code>;</li>
-    <li>form field labels, types and validation settings.</li>
+    <li>the page URL and title;</li>
+    <li>visible text, HTML structure, computed styles, and element sizes and positions;</li>
+    <li>links and image URLs, and page metadata such as <code>og:image</code>;</li>
+    <li>form labels, field types, and validation settings.</li>
   </ul>
-  <p>It does <b>not</b> read what you type into form fields, passwords, cookies, browsing history, or other tabs. The optional interactive form check enters its own sample values and then restores the original ones; neither the sample nor the original values are stored.</p>
+  <p>The extension does not read text you type into form fields, passwords, cookies, browsing history across tabs, or pages you did not choose to audit. The optional form check may enter its own sample values and restore the original fields afterward; it does not save either set of values.</p>
 
-  <h2>Where information is kept</h2>
+  <h2>How information is used and stored</h2>
+  <p>Page information is used to generate the audit, show evidence and suggested fixes, and highlight selected elements. It is processed locally in Chrome and is not transmitted to the developer or another server.</p>
   <table>
-    <tr><th>Information</th><th>Where</th><th>How long</th></tr>
-    <tr><td>Audit findings, search appearance results and the list of active outlines for a tab</td><td>Chrome's temporary session storage on your device (<code>chrome.storage.session</code>)</td><td>Until the tab closes or moves to another page, you delete the report, you withdraw consent, or the browser closes</td></tr>
-    <tr><td>Findings you choose to add to the PDF report list (finding text, element locators, page address and title) and a screenshot of the area around each highlighted element. Screenshots show whatever the page displays there, so avoid adding findings from pages that show personal data you don't want in the report.</td><td>Chrome's temporary session storage on your device (<code>chrome.storage.session</code>)</td><td>Until you remove them, clear the list, withdraw consent, or the browser closes. They stay when the tab moves to another page so one PDF can cover several pages.</td></tr>
-    <tr><td>Your settings (which optional checks are on, viewport sizes, the test search query) and the record that you agreed to the notice</td><td>Extension storage on your device (<code>chrome.storage.local</code>)</td><td>Until you change them or remove the extension</td></tr>
+    <thead><tr><th>Information</th><th>Where it is stored</th><th>How long it is kept</th></tr></thead>
+    <tbody>
+      <tr><td>Audit findings, search appearance results, and active page outlines for a tab</td><td>Chrome temporary session storage on your device (<code>chrome.storage.session</code>)</td><td>Until the tab closes, navigates to another page, you delete the report or withdraw consent, or Chrome closes.</td></tr>
+      <tr><td>Your settings and the record that you agreed to the notice</td><td>Chrome extension storage on your device (<code>chrome.storage.local</code>)</td><td>Until you change them or remove the extension.</td></tr>
+    </tbody>
   </table>
-  <p>Nothing is synced to your Google account and nothing is uploaded.</p>
 
-  <h2>Network requests</h2>
-  <p>The extension has no server of its own. Some checks make requests to the website you're auditing or to sites it links to:</p>
+
+  <h2>Optional exit survey</h2>
+  <p>If you choose “Why are you leaving?” before uninstalling, the reasons you select and any comment you write are placed in a Gmail compose draft addressed to <code>example@gmail.com</code> (a temporary address that the publisher must replace before release). This is an HTTPS link to Gmail; Google receives the information to prepare the draft. The extension does not send the email. You can review, edit, or discard the draft, and the publisher receives feedback only if you press Send. Do not include sensitive information. Gmail's privacy policy and retention practices apply to the draft.</p>
+
+  <h2>Requests made by optional checks</h2>
+  <p>Optional interactive and status-check features are off by default. You can enable them in Settings. The extension has no server of its own. Image checks may reload images already referenced by the audited page; other requests go to that page or to link destinations you choose to check.</p>
   <table>
-    <tr><th>Feature</th><th>Default</th><th>What is requested</th></tr>
-    <tr><td>Same-site link status</td><td>On</td><td>Lightweight HEAD requests (GET as a fallback) from the page to links on the same site, up to the limit in Settings. They come from the page, so they include your usual session for that site. Logout, delete, cart and download links are skipped.</td></tr>
-    <tr><td>Images check and image previews</td><td>Part of the Images check</td><td>Images the page already references may be loaded again to measure them, and the dashboard shows thumbnails of them. The <code>og:image</code> on the Search appearance tab is loaded to measure its size, without a referrer.</td></tr>
-    <tr><td>External links</td><td>Selected by default</td><td>Cookie-free HEAD requests to other sites the page links to. Requires permission to access all sites; links are not requested without it.</td></tr>
-    <tr><td>Test search query</td><td>On</td><td>Submits the query you set in Settings to the audited site's own search. It may navigate the page to its results.</td></tr>
-    <tr><td>Interactive form validation</td><td>On</td><td>No requests: sample values are entered and the submit button pressed so the site's validation runs, while real submission and data-sending requests are blocked.</td></tr>
-    <tr><td>Tabs and keyboard focus</td><td>On</td><td>Temporarily opens and closes tabs or disclosure widgets and moves keyboard focus to check its visibility.</td></tr>
+    <thead><tr><th>Feature</th><th>Default</th><th>Behavior</th></tr></thead>
+    <tbody>
+      <tr><td>Same-site link status</td><td>Off</td><td>When enabled, checks a limited number of links with HEAD requests and GET as a fallback. Requests run from the audited page and may use your existing session. Logout, delete, cart, and download links are skipped.</td></tr>
+      <tr><td>External link status</td><td>Off</td><td>When enabled, requests cookie-free HEAD checks to external links. Chrome asks you for optional site access before these requests can run.</td></tr>
+      <tr><td>Test search query</td><td>Off</td><td>When enabled, submits the query you chose in Settings to the audited site's own search. It may navigate the page to the results.</td></tr>
+      <tr><td>Interactive form validation</td><td>Off</td><td>When enabled, tries sample values in up to five forms. It blocks real submissions and data-sending requests and restores the fields.</td></tr>
+      <tr><td>Tabs and keyboard focus</td><td>Off</td><td>When enabled, briefly opens and closes page tabs or disclosure widgets and moves focus to check visibility.</td></tr>
+      <tr><td>Image checks and previews</td><td>Part of an audit</td><td>May load image URLs already referenced by the page to measure them and show thumbnails. Search appearance may load the page's <code>og:image</code> to measure it, without a referrer.</td></tr>
+    </tbody>
   </table>
+
   <h2>Permissions</h2>
   <table>
-    <tr><th>Permission</th><th>Why it is needed</th></tr>
-    <tr><td><code>activeTab</code>, <code>scripting</code></td><td>Run the audit on the tab where you click the extension. Nothing is injected into pages automatically.</td></tr>
-    <tr><td>Optional access to sites</td><td>Requested when you choose “Allow access to this site” or allow external link checks to access all sites. You can revoke this access in Chrome's extension settings.</td></tr>
-    <tr><td><code>debugger</code></td><td>Required for responsive screen-size emulation. Chrome requires this permission at install time. It attaches only to the audited tab while the responsive check runs, or while screenshots for the PDF report are taken when the tab cannot be captured directly; the browser window is not resized, and Chrome shows a brief debugging notice.</td></tr>
-    <tr><td><code>storage</code></td><td>Keep findings for the tab and your settings, as described above.</td></tr>
-    <tr><td><code>sidePanel</code></td><td>Optionally show the dashboard in Chrome's side panel.</td></tr>
+    <thead><tr><th>Permission</th><th>Why it is needed</th></tr></thead>
+    <tbody>
+      <tr><td><code>activeTab</code> and <code>scripting</code></td><td>Run packaged audit code on the tab where you invoke a page feature. Nothing is injected automatically.</td></tr>
+      <tr><td><code>storage</code></td><td>Keep settings, consent, and audit findings on your device.</td></tr>
+      <tr><td><code>sidePanel</code></td><td>Offer the dashboard in Chrome's side panel.</td></tr>
+      <tr><td><code>debugger</code></td><td>Chrome requires this install-time permission for responsive viewport emulation. It attaches only to the audited tab while the relevant feature runs, then detaches. Chrome may show a brief debugging notice. The browser window is not resized.</td></tr>
+      <tr><td>Optional site access</td><td>Requested only when you allow access to a site or enable external link checks. You can revoke it in Chrome's extension settings.</td></tr>
+    </tbody>
   </table>
 
   <h2>Your choices</h2>
   <ul>
-    <li>Choose “Not now” on the notice, and the extension won't read any page.</li>
-    <li>Delete a tab's report with “Delete this report”.</li>
-    <li>Withdraw consent in Settings → Privacy. All stored reports are deleted, and the notice is shown again before the next audit.</li>
+    <li>Choose “Not now” in the notice and the extension will not read a page.</li>
+    <li>Keep optional interactive and network checks off, or enable only the checks you want in Settings.</li>
+    <li>Use “Delete this report” to remove a tab's findings.</li>
+    <li>Use Settings → Privacy → “Withdraw consent and delete stored audit data” to remove stored reports and require consent again before the next page feature.</li>
     <li>Remove the extension to delete its settings.</li>
   </ul>
 
+  <h2>Sharing and Limited Use</h2>
+  <p>Website content, findings, settings, and images referenced by the audited page are not shared with the developer or third parties. The optional exit survey is user-initiated and sends only the selected reasons and comment to Gmail to prepare a draft; the publisher receives it only if you send the email. Feedback is used only to improve the extension. The extension does not sell user data or use it for advertising, profiling, credit decisions, or purposes unrelated to its single purpose. Its use of website content complies with the Chrome Web Store User Data Policy, including the Limited Use requirements.</p>
+
   <h2>Limits of the audit</h2>
-  <p>Automated checks find common problems on the page as it is at that moment. They don't test a whole site, don't guarantee accessibility or compliance with any standard, and don't replace human review.</p>
+  <p>Automated checks find common problems on one page as it appears at that moment. They do not test a whole site, guarantee accessibility or compliance with any standard, or replace human review.</p>
 
   <h2>Contact</h2>
-  <p>Questions about this policy can be sent through the support link on the extension's Chrome Web Store listing.</p>
+  <p>For questions about this policy, use the support link on the extension's Chrome Web Store listing.</p>
 </main>
 </body>
 </html>

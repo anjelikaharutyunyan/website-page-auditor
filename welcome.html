@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f7ff">
+  <title>Welcome – Website Page Auditor</title>
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/main-16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/main-32.png">
+  <link rel="stylesheet" href="welcome.css">
+</head>
+<body>
+  <main class="welcome-shell">
+    <header class="brand"><img src="icons/main-128.png" width="56" height="56" alt=""><div><strong>Website Page Auditor</strong><small>Find and review issues on any webpage.</small></div></header>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">YOUR FIRST CHECK</p>
+        <h1>Spot page issues.<br>See where they happen.</h1>
+        <p>Check a page, review findings, and highlight elements to inspect.</p>
+        <button id="choosePage" class="primary" type="button">Start with a page</button>
+      </div>
+      <figure class="preview" aria-label="Example page audit results">
+        <div class="mock-toolbar"><i></i><i></i><i></i><span>Example page audit</span></div>
+        <div class="mock-summary">
+          <div class="summary-issue"><b>3</b><small>Issues found</small></div>
+          <div class="summary-warning"><b>4</b><small>Possible issues</small></div>
+          <div class="summary-review"><b>1</b><small>Review manually</small></div>
+          <div class="summary-pass"><b>8</b><small>No issue found</small></div>
+          <p><strong>Open issues by severity</strong><span>High 2</span><span>Medium 4</span><span>Low 2</span></p>
+        </div>
+        <div class="mock-finding"><span class="mock-dot"></span><span class="finding-copy"><b>Image needs alt text</b><small>Images · High severity · Issue found</small><code>img.hero-banner</code><small class="finding-fix">Add descriptive alt text for screen readers.</small></span><span class="mock-arrow">›</span></div>
+        <div class="mock-finding"><span class="mock-dot amber"></span><span class="finding-copy"><b>Content overflows viewport</b><small>Responsive · 375 × 812 · Possible issue</small><code>main .content-grid</code><small class="finding-fix">Review the highlighted element at this size.</small></span><span class="mock-arrow">›</span></div>
+        <div class="mock-highlight"><span><i></i> Selected element · example.com/page</span><b>main .content-grid</b><small>Highlighted on the page · Suggested fix available</small></div>
+      </figure>
+    </section>
+    <section class="steps" aria-label="How to start">
+      <article class="step-card"><img src="icons/welcome-step-1.svg" alt="" width="120" height="86"><h2><b>1</b> Open a website</h2></article>
+      <article class="step-card"><img src="icons/welcome-step-2.svg" alt="" width="120" height="86"><h2><b>2</b> Click the extension icon</h2></article>
+      <article class="step-card"><img src="icons/welcome-step-3.svg" alt="" width="120" height="86"><h2><b>3</b> Run an audit</h2></article>
+    </section>
+    <footer><a href="privacy.html" target="_blank" rel="noopener">Privacy</a><span>·</span><span>Page content stays on your device.</span></footer>
+  </main>
+  <script src="js/welcome.js"></script>
+</body>
+</html>

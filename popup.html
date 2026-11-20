@@ -26,8 +26,7 @@
       <li data-i18n="uiConsentReads"><b>What it reads:</b> the page address and title, visible text, HTML structure, styles and element sizes, links, images, and form field labels and settings. It does not read what you type into form fields, passwords or cookies.</li>
       <li data-i18n="uiConsentWhen"><b>When:</b> only on the tab where you open it, and only when you check the page, open the Search appearance tab or use an Inspect page tool.</li>
       <li data-i18n="uiConsentWhere"><b>Where findings go:</b> they stay in this browser's temporary storage for that tab and are deleted when the tab closes or moves to another page. Nothing is sent to the developer or to any other server.</li>
-      <li data-i18n="uiConsentPdf">PDF report: findings you add to the PDF report, with a screenshot of each highlighted element, stay in this browser's temporary storage until you clear the list or close the browser, even after the tab moves to another page.</li>
-      <li data-i18n="uiConsentOptional"><b>Optional checks:</b> on by default; change them in Settings. UI tests briefly open and close tabs. Form tests use sample values but block submissions. Search sends a real query and may navigate. Same-site links use your session; external link checks require permission to access all sites.</li>
+      <li data-i18n="uiConsentOptional"><b>Optional checks:</b> page interactions and status requests are off by default; enable them in Settings before they run. UI tests briefly open and close tabs. Form tests use sample values but block submissions. Search sends a real query and may navigate. Same-site links use your session; external link checks need site access.</li>
     </ul>
     <p><a href="privacy.html" target="_blank" rel="noopener" data-i18n="uiReadPrivacy">Read the privacy policy</a></p>
     <div class="run-bar">
@@ -47,7 +46,6 @@
     <button class="view-tab" role="tab" aria-selected="false" data-view="images" type="button" data-i18n="uiTabImages">Images</button>
     <button class="view-tab" role="tab" aria-selected="false" data-view="seo" type="button" data-i18n="uiTabSearchAppearance">Search appearance</button>
     <button class="view-tab" role="tab" aria-selected="false" data-view="tools" type="button" data-i18n="uiTabInspect">Inspect page</button>
-    <button class="view-tab" role="tab" aria-selected="false" data-view="pdf" type="button"><span data-i18n="uiTabPdf">PDF report</span> <span id="pdfTabCount" class="tab-count d-none"></span></button>
     <button class="view-tab" role="tab" aria-selected="false" data-view="settings" type="button" data-i18n="uiTabSettings">Settings</button>
   </nav>
 
@@ -98,8 +96,6 @@
       </details>
 
       <div id="exportBar" class="export-bar d-none">
-        <label class="select-all"><input id="selectShown" type="checkbox"> <span data-i18n="uiSelectShown">Select all shown</span></label>
-        <button id="addSelected" class="btn btn-sm btn-primary" type="button" disabled></button>
         <span class="spacer"></span>
         <button id="clearReport" class="btn btn-sm btn-link-danger" type="button" data-i18n="uiDeleteReport">Delete this report</button>
       </div>
@@ -152,10 +148,6 @@
       <div id="seoEmpty" class="empty-state"><p data-i18n="uiSeoEmpty">Search appearance checks run automatically every time this tab is opened.</p></div>
       <div id="seoResults" class="d-none">
         <div id="seoChecks" class="results-list"></div>
-        <div class="export-bar">
-          <label class="select-all"><input id="seoSelectShown" type="checkbox"> <span data-i18n="uiSelectShown">Select all shown</span></label>
-          <button id="seoAddSelected" class="btn btn-sm btn-primary" type="button" disabled></button>
-        </div>
       </div>
 
       <div id="seoProgress" class="progress d-none" aria-live="polite">
@@ -174,23 +166,11 @@
       <div class="run-bar"><button id="resetAids" class="btn btn-sm" type="button" data-i18n="uiRemoveOutlines">Remove all outlines</button></div>
     </section>
 
-    <!-- PDF report: findings collected from any number of pages -->
-    <section id="view-pdf" class="view d-none" role="tabpanel">
-      <p class="hint"><span data-i18n="uiPdfHint">Collect findings from as many pages as you like, then download them as one PDF. The list stays when you move to other pages or tabs, and is cleared when you close the browser.</span> <span data-i18n="uiPdfShotHint">When a finding points to an element, it is highlighted on the page and a screenshot of it is added under the finding.</span></p>
-      <div id="pdfEmpty" class="empty-state"><p data-i18n="uiPdfEmpty">Nothing added yet. On the Page audit or Search appearance tab, tick the findings you want and press “Add to PDF report”.</p></div>
-      <div id="pdfSummary" class="report-meta"></div>
-      <div id="pdfPages" class="results-list"></div>
-      <div class="run-bar">
-        <button id="downloadPdf" class="btn btn-primary" type="button" data-i18n="uiDownloadPdf" disabled>Download PDF</button>
-        <button id="clearPdf" class="btn btn-sm btn-link-danger" type="button" data-i18n="uiClearPdf" disabled>Clear the list</button>
-      </div>
-    </section>
-
     <!-- Settings -->
     <section id="view-settings" class="view d-none" role="tabpanel">
       <details class="advanced-settings">
         <summary data-i18n="uiAdditionalOptions">Additional audit options</summary>
-        <p class="hint" data-i18n="uiOptionsDefault">These checks are on by default. Turn off any you don't want.</p>
+        <p class="hint" data-i18n="uiOptionsDefault">These optional checks are off by default. Turn on only the checks you want to run.</p>
         <label class="setting"><input type="checkbox" data-setting="interactiveTests"> <span><b data-i18n="uiCheckTabsFocus">Check tabs and keyboard focus</b><br><span data-i18n="uiCheckTabsFocusHelp">Temporarily opens tabs and disclosure widgets, then checks visible keyboard focus.</span></span></label>
         <label class="setting"><input type="checkbox" data-setting="formInteractive"> <span><b data-i18n="uiCheckForms">Check form validation</b><br><span data-i18n="uiCheckFormsHelp">Tries sample values in up to five forms. Actual submissions are blocked and fields are restored.</span></span></label>
         <label class="setting"><input type="checkbox" data-setting="searchQueryTest"> <span><b data-i18n="uiTestSearch">Test site search</b><br><span data-i18n="uiTestSearchHelp">Sends a real search request and may navigate to results.</span></span></label>
@@ -206,7 +186,7 @@
       </details>
 
       <h2 class="section-title" data-i18n="uiResponsiveViewports">Responsive viewports</h2>
-      <p class="hint" data-i18n="uiResponsiveHelp">Uses Chrome’s debugger permission to emulate this tab without resizing the browser window. A brief Chrome notice may appear.</p>
+      <p class="hint" data-i18n="uiResponsiveHelp">Uses Chrome’s required debugger permission to emulate this tab while checks run. Chrome asks for this permission at install time; it attaches only while the feature runs. A brief notice may appear.</p>
       <div id="viewportPresets" class="viewport-list"></div>
       <form id="customViewportForm" class="custom-viewport">
         <input id="customLabel" type="text" placeholder="Label" data-i18n-placeholder="uiLabel" maxlength="20" aria-label="Custom viewport label" data-i18n-aria="uiCustomViewportLabel">
@@ -218,7 +198,8 @@
       <div id="customViewports" class="viewport-list"></div>
 
       <h2 class="section-title" data-i18n="uiPrivacy">Privacy</h2>
-      <p class="hint"><span data-i18n="uiPrivacySummary">Audits read only the page you check. Findings stay in this browser's temporary storage for that tab and are never sent to the developer or any other server.</span> <span data-i18n="uiPrivacyPdf">Findings you add to the PDF report, and their screenshots, are kept until you clear the list or close the browser.</span> <a href="privacy.html" target="_blank" rel="noopener" data-i18n="uiPrivacyPolicy">Privacy policy</a></p>
+      <p class="hint"><span data-i18n="uiPrivacySummary">Audits read only the page you check. Findings stay in this browser's temporary storage for that tab and are never sent to the developer or any other server.</span> <a href="privacy.html" target="_blank" rel="noopener" data-i18n="uiPrivacyPolicy">Privacy policy</a></p>
+      <p class="hint"><a href="leave.html" target="_blank" rel="noopener">Why are you leaving?</a> · <span>Share optional feedback before removing the extension.</span></p>
       <div class="run-bar">
         <button id="withdrawConsent" class="btn btn-sm btn-link-danger" type="button" data-i18n="uiWithdrawConsent">Withdraw consent and delete all reports</button>
       </div>

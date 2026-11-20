@@ -97,13 +97,8 @@
     openGroups: new Set(),
     shown: {},
     filters: { status: "", severity: "" },
-    selected: new Set(),
-    capturing: false,
-    pdf: [],
-    pdfOpen: new Set(),
   };
   // Session storage survives navigation and tab switches but not a browser restart.
-  const PDF_KEY = "pdfReport";
   let tabLoadGeneration = 0;
 
   // ---------------------------------------------------------------- utilities
@@ -194,7 +189,6 @@
       app.seoFilter = "";
       app.seoProgress = null;
       app.shown = {};
-      app.selected.clear();
     }
     const access = await send("qa:checkAccess");
     if (generation !== tabLoadGeneration || app.tabId !== tab.id) return;
@@ -247,7 +241,6 @@
     renderSeo();
     renderTools();
     renderSettings();
-    renderPdf();
   }
 
   function renderHeader() {
@@ -377,7 +370,6 @@
   function renderResults() {
     const list = $("resultsList");
     list.textContent = "";
-    renderSelection();
     if (!app.report) return;
     const items = filteredResults();
     if (!items.length) {
@@ -427,7 +419,7 @@
       }
       node.replaceWith(resultNode(r));
     });
-    node.append(el("div", { class: "result-row" }, selectBox(`a|${key}`, tf(r.name)), head));
+    node.append(el("div", { class: "result-row" }, head));
     if (open) node.append(resultBody(r));
     return node;
   }
@@ -602,7 +594,7 @@
       }
       node.replaceWith(seoNode(c, s));
     });
-    node.append(el("div", { class: "result-row" }, selectBox(`s|${c.id}`, tf(c.name)), head));
+    node.append(el("div", { class: "result-row" }, head));
     if (open) node.append(seoBody(c, s));
     return node;
   }
@@ -637,7 +629,6 @@
     $("seoFilters").classList.toggle("d-none", !s);
     $("seoMeta").textContent = s ? t("uiAnalyzed", [s.url]) : "";
     renderSeoProgress();
-    renderSelection();
     const list = $("seoChecks");
     list.textContent = "";
     if (!s) return;
@@ -748,255 +739,6 @@
         el("td", { text: [tf(i.croppingLikely), i.croppedPercent ? t("uiPercentHidden", [String(i.croppedPercent)]) : "", tf(i.cropAssessment)].filter(Boolean).join(" · ") || "—" }));
       if (i.selector || i.ref) row.addEventListener("click", () => highlight({ name: t("uiImage"), severity: "info", status: "", message: i.src, selector: i.selector, ref: i.ref }));
       tbody.append(row);
-    }
-  }
-
-  // ---------------------------------------------------------------- PDF report
-
-  function selectBox(id, label) {
-    return el("input", {
-      type: "checkbox",
-      class: "pick",
-      checked: app.selected.has(id),
-      title: t("uiSelectFinding"),
-      "aria-label": `${t("uiSelectFinding")}: ${label}`,
-      onchange: (e) => {
-        if (e.target.checked) app.selected.add(id);
-        else app.selected.delete(id);
-        renderSelection();
-      },
-    });
-  }
-
-  function seoShownChecks() {
-    return app.seo ? app.seo.checks.filter((c) => !app.seoFilter || c.status === app.seoFilter) : [];
-  }
-
-  function pageInfo(url) {
-    return { url: url || (app.access && app.access.url) || (app.tab && app.tab.url) || "", title: (app.tab && app.tab.title) || "" };
-  }
-
-  // Stored in English like the reports; report.html translates when it renders.
-  function auditSnapshot(r) {
-    return {
-      kind: "audit",
-      key: `a|${resultKey(r)}`,
-      testId: r.testId,
-      category: r.category,
-      status: r.status,
-      severity: r.severity,
-      verification: r.verification,
-      name: r.name,
-      message: r.message || "",
-      selector: r.selector || "",
-      actual: r.actual === undefined || r.actual === null ? null : String(r.actual),
-      expected: r.expected === undefined || r.expected === null ? null : String(r.expected),
-      fix: r.fix || "",
-      viewport: r.viewport ? { width: r.viewport.width, height: r.viewport.height, label: r.viewport.label || "" } : null,
-      occurrences: r.occurrences || 1,
-      locations: (r.instances || []).map((i) => i.selector).filter(Boolean).slice(0, 25),
-    };
-  }
-
-  function seoSnapshot(c) {
-    const groups = (c.items && c.items.groups) || [];
-    return {
-      kind: "seo",
-      key: `s|${c.id}`,
-      testId: c.id,
-      category: "seo",
-      status: c.status,
-      name: c.name,
-      value: c.value === undefined || c.value === null ? "" : String(c.value),
-      message: c.detail || "",
-      total: c.items ? c.items.total : 0,
-      locations: groups.slice(0, 25).map((g) => ({ selector: g.instances[0].selector, label: g.instances[0].label || "", count: g.count })),
-    };
-  }
-
-  // What to photograph for a finding. Responsive findings measured at another size are photographed with
-  // that size emulated again.
-  function auditCapture(r) {
-    if (!r.ref && !r.selector) return null;
-    const shot = { target: { ref: r.ref, selector: r.selector }, severity: r.severity };
-    const base = app.report.meta && app.report.meta.baseViewport;
-    if (r.category === "responsive" && r.viewport && (!base || r.viewport.width !== base.width || r.viewport.height !== base.height)) {
-      shot.viewport = { width: r.viewport.width, height: r.viewport.height, mobile: r.viewport.width < 1024 };
-    }
-    return shot;
-  }
-
-  function seoCapture(c) {
-    const first = c.items && c.items.groups[0] && c.items.groups[0].instances[0];
-    return first ? { target: { ref: first.ref, selector: first.selector }, severity: c.status === "issue" ? "high" : "medium" } : null;
-  }
-
-  function selectedItems() {
-    const out = [];
-    if (app.report) {
-      const page = pageInfo(app.report.meta && app.report.meta.url);
-      for (const r of app.report.results) if (app.selected.has(`a|${resultKey(r)}`)) out.push({ page, ...auditSnapshot(r), capture: auditCapture(r) });
-    }
-    if (app.seo) {
-      const page = pageInfo(app.seo.url);
-      for (const c of app.seo.checks) if (app.selected.has(`s|${c.id}`)) out.push({ page, ...seoSnapshot(c), capture: seoCapture(c) });
-    }
-    return out;
-  }
-
-  function syncSelectAll(box, ids) {
-    const on = ids.filter((id) => app.selected.has(id)).length;
-    box.checked = ids.length > 0 && on === ids.length;
-    box.indeterminate = on > 0 && on < ids.length;
-    box.disabled = !ids.length;
-  }
-
-  function renderSelection() {
-    const n = selectedItems().length;
-    for (const id of ["addSelected", "seoAddSelected"]) {
-      $(id).textContent = t("uiAddSelected", [String(n)]);
-      $(id).disabled = !n || app.capturing;
-    }
-    syncSelectAll($("selectShown"), app.report ? filteredResults().map((r) => `a|${resultKey(r)}`) : []);
-    syncSelectAll($("seoSelectShown"), seoShownChecks().map((c) => `s|${c.id}`));
-  }
-
-  function selectShown(ids, on) {
-    for (const id of ids) {
-      if (on) app.selected.add(id);
-      else app.selected.delete(id);
-    }
-  }
-
-  async function loadPdf() {
-    const data = await chrome.storage.session.get(PDF_KEY).catch(() => ({}));
-    app.pdf = (data[PDF_KEY] && data[PDF_KEY].items) || [];
-  }
-
-  async function savePdf(items) {
-    if (items.length) await chrome.storage.session.set({ [PDF_KEY]: { items } });
-    else await chrome.storage.session.remove(PDF_KEY);
-    app.pdf = items;
-  }
-
-  function pdfPages() {
-    const pages = new Map();
-    for (const i of app.pdf) {
-      if (!pages.has(i.page.url)) pages.set(i.page.url, { url: i.page.url, title: i.page.title, items: [] });
-      pages.get(i.page.url).items.push(i);
-    }
-    return [...pages.values()];
-  }
-
-  async function dropShots(keys) {
-    if (keys.length) await chrome.storage.session.remove(keys).catch(() => {});
-  }
-
-  async function addSelected() {
-    if (app.capturing) return;
-    const picked = selectedItems();
-    if (!picked.length) return toast(t("uiNothingSelected"), "warning");
-    app.capturing = true;
-    renderSelection();
-    try {
-      const wanted = picked.map((p, i) => (p.capture ? { id: String(i), ...p.capture } : null)).filter(Boolean);
-      let shots = {};
-      if (wanted.length) {
-        toast(t("uiTakingScreenshots", [String(wanted.length)]));
-        const res = await send("qa:captureFindings", { targets: wanted });
-        if (res && res.ok) shots = res.shots || {};
-      }
-      const now = new Date().toISOString();
-      const byId = new Map(app.pdf.map((i) => [i.id, i]));
-      const replaced = [];
-      let storageFull = false;
-      for (const [idx, { capture, ...item }] of picked.entries()) {
-        const id = `${item.page.url}|${item.key}`;
-        const old = byId.get(id);
-        const image = shots[String(idx)];
-        if (image && !storageFull) {
-          const key = `pdfShot:${crypto.randomUUID()}`;
-          try {
-            await chrome.storage.session.set({ [key]: image });
-            item.shot = key;
-            if (old && old.shot) replaced.push(old.shot);
-          } catch {
-            storageFull = true;
-          }
-        }
-        if (!item.shot && old && old.shot) item.shot = old.shot;
-        byId.set(id, { ...item, id, addedAt: now });
-      }
-      const items = [...byId.values()];
-      try {
-        await savePdf(items);
-      } catch {
-        return toast(t("uiPdfStorageFull"), "danger");
-      }
-      await dropShots(replaced);
-      app.selected.clear();
-      const missing = wanted.length - Object.keys(shots).length;
-      const added = t("uiAddedToPdf", [String(picked.length), String(items.length), String(pdfPages().length)]);
-      if (storageFull) toast(`${added} ${t("uiShotsStorageFull")}`, "warning");
-      else if (missing > 0) toast(`${added} ${t("uiShotsMissing", [String(missing)])}`, "warning");
-      else toast(added);
-    } finally {
-      app.capturing = false;
-      renderResults();
-      renderSeo();
-      renderPdf();
-    }
-  }
-
-  async function removePdf(keep) {
-    const removed = app.pdf.filter((x) => !keep(x));
-    await savePdf(app.pdf.filter(keep));
-    await dropShots(removed.map((x) => x.shot).filter(Boolean));
-    renderPdf();
-  }
-
-  function pdfStatus(i) {
-    return i.kind === "seo"
-      ? { text: SEO_STATUS_LABEL[i.status] || i.status, cls: SEO_RESULT_CLASS[i.status] || "info" }
-      : { text: STATUS_LABEL[i.status] || i.status, cls: i.status };
-  }
-
-  function shotThumb(key, name) {
-    const img = el("img", { class: "pdf-thumb", alt: `${t("uiScreenshot")}: ${name}` });
-    chrome.storage.session.get(key).then((d) => (d[key] ? (img.src = d[key]) : img.remove())).catch(() => img.remove());
-    return el("div", { class: "pdf-shot" }, img);
-  }
-
-  function renderPdf() {
-    const pages = pdfPages();
-    const n = app.pdf.length;
-    $("pdfTabCount").textContent = n ? String(n) : "";
-    $("pdfTabCount").classList.toggle("d-none", !n);
-    $("pdfEmpty").classList.toggle("d-none", !!n);
-    $("downloadPdf").disabled = !n;
-    $("clearPdf").disabled = !n;
-    $("pdfSummary").textContent = n ? t("uiPdfSummary", [String(n), String(pages.length)]) : "";
-    const list = $("pdfPages");
-    list.textContent = "";
-    for (const p of pages) {
-      const det = el("details", { class: "group pdf-page", open: app.pdfOpen.has(p.url) });
-      det.addEventListener("toggle", () => (det.open ? app.pdfOpen.add(p.url) : app.pdfOpen.delete(p.url)));
-      det.append(el("summary", {}, el("span", { text: p.title || p.url }), " ", el("span", { class: "count", text: p.items.length })));
-      det.append(el("div", { class: "pdf-page-url", text: p.url }));
-      for (const i of p.items) {
-        const status = pdfStatus(i);
-        det.append(el("div", { class: `result status-${status.cls}` },
-          el("div", { class: "result-head seo-static" },
-            el("span", { class: `chip pdf-status pdf-status-${status.cls}`, text: status.text }),
-            el("span", { class: "result-name", text: tf(i.name) }),
-            el("span", { class: "spacer" }),
-            el("button", { class: "btn btn-xs btn-link-danger", type: "button", "aria-label": `${t("uiRemove")}: ${tf(i.name)}`, onclick: () => removePdf((x) => x.id !== i.id) }, t("uiRemove")),
-            i.message ? el("span", { class: "result-msg", text: tf(i.message) }) : null),
-          i.shot ? shotThumb(i.shot, tf(i.name)) : null));
-      }
-      det.append(el("div", { class: "result-actions" },
-        el("button", { class: "btn btn-xs btn-link-danger", type: "button", onclick: () => removePdf((x) => x.page.url !== p.url) }, t("uiRemovePage"))));
-      list.append(det);
     }
   }
 
@@ -1173,31 +915,6 @@
     $("filterSeverity").addEventListener("change", (e) => setFilter({ severity: e.target.value }));
     $("resetFilters").addEventListener("click", () => setFilter({ status: "", severity: "" }));
 
-    $("selectShown").addEventListener("change", (e) => {
-      if (!app.report) return;
-      selectShown(filteredResults().map((r) => `a|${resultKey(r)}`), e.target.checked);
-      renderResults();
-    });
-    $("seoSelectShown").addEventListener("change", (e) => {
-      selectShown(seoShownChecks().map((c) => `s|${c.id}`), e.target.checked);
-      renderSeo();
-    });
-    $("addSelected").addEventListener("click", addSelected);
-    $("seoAddSelected").addEventListener("click", addSelected);
-    $("downloadPdf").addEventListener("click", () => chrome.tabs.create({ url: chrome.runtime.getURL("report.html?print=1") }));
-    $("clearPdf").addEventListener("click", async () => {
-      await savePdf([]);
-      const all = await chrome.storage.session.get(null).catch(() => ({}));
-      await dropShots(Object.keys(all).filter((k) => k.startsWith("pdfShot:")));
-      renderPdf();
-      toast(t("uiPdfCleared"));
-    });
-    chrome.storage.onChanged.addListener((changes, area) => {
-      if (area !== "session" || !changes[PDF_KEY]) return;
-      app.pdf = (changes[PDF_KEY].newValue && changes[PDF_KEY].newValue.items) || [];
-      renderPdf();
-    });
-
     $("clearReport").addEventListener("click", async () => {
       await send("qa:clearHighlights");
       await send("qa:clearReport");
@@ -1275,8 +992,7 @@
         app.seoFilter = "";
         app.seoProgress = null;
         app.shown = {};
-        app.selected.clear();
-        loadTab(app.tab);
+          loadTab(app.tab);
       }
     });
 
@@ -1303,8 +1019,6 @@
     // popup.html?tabId=N opens the dashboard for a specific tab (used when the dashboard is opened as a page).
     const forced = Number(new URLSearchParams(location.search).get("tabId"));
     const tab = forced ? await chrome.tabs.get(forced).catch(() => null) : (await chrome.tabs.query({ active: true, currentWindow: true }))[0];
-    await loadPdf();
-    renderPdf();
     await loadTab(tab);
   }
 
@@ -1323,9 +1037,7 @@
       const res = await send("qa:setConsent", { accepted: false });
       if (!res || !res.ok) return toast((res && res.message) || t("uiCouldNotWithdraw"), "danger");
       app.consented = false;
-      Object.assign(app, { report: null, scan: null, seo: null, seoProgress: null, aids: {}, pdf: [] });
-      app.selected.clear();
-      renderPdf();
+      Object.assign(app, { report: null, scan: null, seo: null, seoProgress: null, aids: {} });
       showConsent(true);
       toast(t("uiConsentWithdrawn"));
     });

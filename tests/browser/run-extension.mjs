@@ -13,6 +13,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const OUT = path.join(ROOT, "tests/browser/output");
+const SCREENSHOTS_ONLY = process.argv.includes("--screenshots-only");
 fs.mkdirSync(OUT, { recursive: true });
 const CHROME = [process.env.CHROME_PATH, "C:/Program Files/Google/Chrome/Application/chrome.exe", "/usr/bin/google-chrome", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"].filter(Boolean).find((p) => fs.existsSync(p));
 if (!CHROME) {
@@ -21,7 +22,7 @@ if (!CHROME) {
 }
 
 // ---------------------------------------------------------------- server
-const MIME = { ".html": "text/html", ".js": "text/javascript", ".png": "image/png", ".css": "text/css" };
+const MIME = { ".html": "text/html", ".js": "text/javascript", ".png": "image/png", ".svg": "image/svg+xml", ".css": "text/css" };
 const requests = [];
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, "http://x");
@@ -35,17 +36,18 @@ const server = http.createServer((req, res) => {
 await new Promise((r) => server.listen(0, "127.0.0.1", r));
 const PORT = server.address().port;
 const BASE = `http://127.0.0.1:${PORT}/tests/fixtures`;
+const STORE_BASE = `http://demo-shop.test:${PORT}/tests/fixtures`;
 
 // ---------------------------------------------------------------- extension copy
 const extDir = fs.mkdtempSync(path.join(os.tmpdir(), "webqa-ext-"));
-for (const p of ["manifest.json", "popup.html", "popup.css", "report.html", "report.css", "privacy.html", "_locales", "icons", "js"]) fs.cpSync(path.join(ROOT, p), path.join(extDir, p), { recursive: true });
+for (const p of ["manifest.json", "popup.html", "popup.css", "privacy.html", "welcome.html", "welcome.css", "leave.html", "leave.css", "_locales", "icons", "js", "store"]) fs.cpSync(path.join(ROOT, p), path.join(extDir, p), { recursive: true });
 const manifest = JSON.parse(fs.readFileSync(path.join(extDir, "manifest.json"), "utf8"));
-manifest.host_permissions = ["http://127.0.0.1/*", "http://localhost/*"];
+manifest.host_permissions = ["http://127.0.0.1/*", "http://localhost/*", "http://demo-shop.test/*"];
 fs.writeFileSync(path.join(extDir, "manifest.json"), JSON.stringify(manifest, null, 2));
 
 // ---------------------------------------------------------------- chrome over pipe
 const profile = fs.mkdtempSync(path.join(os.tmpdir(), "webqa-prof-"));
-const chrome = spawn(CHROME, ["--headless=new", "--remote-debugging-pipe", "--enable-unsafe-extension-debugging", `--user-data-dir=${profile}`, "--no-first-run", "--no-default-browser-check", "--window-size=1280,800", "about:blank"], { stdio: ["ignore", "ignore", "ignore", "pipe", "pipe"] });
+const chrome = spawn(CHROME, ["--headless=new", "--remote-debugging-pipe", "--enable-unsafe-extension-debugging", "--host-resolver-rules=MAP demo-shop.test 127.0.0.1", `--user-data-dir=${profile}`, "--no-first-run", "--no-default-browser-check", "--window-size=1280,800", "about:blank"], { stdio: ["ignore", "ignore", "ignore", "pipe", "pipe"] });
 const pipeOut = chrome.stdio[3];
 const pipeIn = chrome.stdio[4];
 let msgId = 0;
@@ -126,6 +128,7 @@ try {
   await send("Runtime.enable", {}, sw);
   console.log(`Loaded extension ${extId} (${manifest.version}) in ${path.basename(CHROME)}\n`);
 
+  if (!SCREENSHOTS_ONLY) {
   // 0. Nothing reads a page before the user agrees to the in-product notice; emulation starts switched off.
   {
     const tabId = await openTab(`${BASE}/clean.html`);
@@ -388,7 +391,7 @@ try {
     fs.writeFileSync(path.join(OUT, "dashboard-settings.png"), Buffer.from(shot2.data, "base64"));
     record("dashboard (popup.html) renders the report", [
       [Number(ui.failed) > 0 && ui.groups.length >= 2, `summary shows ${ui.failed} failed; groups: ${ui.groups.join(" | ")}`],
-      [ui.tabs === "Page audit | Images | Search appearance | Inspect page | PDF report | Settings" && ui.runAll === "Check this page", `tabs: ${ui.tabs}; main button: ${ui.runAll}`],
+      [ui.tabs === "Page audit | Images | Search appearance | Inspect page | Settings" && ui.runAll === "Check this page", `tabs: ${ui.tabs}; main button: ${ui.runAll}`],
       [ui.cards === "Issue found | Possible issue | Review manually | No issue found", `summary cards: ${ui.cards}`],
       [ui.chips.length > 0 && ui.chips.every((c) => ["Issue found", "Possible issue", "Check manually", "No issue found"].includes(c)), `finding labels: ${ui.chips.join(", ")}`],
       [ui.cats === 9 && ui.exportVisible && !ui.empty, "category cards and export bar visible"],
@@ -503,124 +506,14 @@ try {
     ]);
   }
 
-  // 8b. PDF report: findings picked on two pages survive navigation and print together as one PDF.
-  {
-    const errors = [];
-    const openDashboard = async (tabId) => {
-      const { targetId } = await send("Target.createTarget", { url: `chrome-extension://${extId}/popup.html?tabId=${tabId}` });
-      const ps = (await send("Target.attachToTarget", { targetId, flatten: true })).sessionId;
-      listeners.push((m) => {
-        if (m.sessionId === ps && m.method === "Runtime.exceptionThrown") errors.push(m.params.exceptionDetails.exception?.description || m.params.exceptionDetails.text);
-      });
-      await send("Runtime.enable", {}, ps);
-      await send("Emulation.setDeviceMetricsOverride", { width: 752, height: 1100, deviceScaleFactor: 1, mobile: false }, ps);
-      await sleep(1500);
-      return { targetId, ps };
-    };
-    const stored = () => bg(`chrome.storage.session.get("pdfReport").then(d => (d.pdfReport && d.pdfReport.items) || [])`);
-    const tabId = await openTab(`${BASE}/layout-defects.html`);
-    await scan(tabId, { categories: ["layout", "accessibility"] });
-    let d = await openDashboard(tabId);
-    const picked = await evaluate(d.ps, `(() => {
-      const boxes = [...document.querySelectorAll("#resultsList input.pick")].slice(0, 2);
-      boxes.forEach(b => b.click());
-      return { boxes: document.querySelectorAll("#resultsList input.pick").length, button: document.getElementById("addSelected").textContent, enabled: !document.getElementById("addSelected").disabled };
-    })()`);
-    await bg(`chrome.tabs.update(${tabId}, { active: true })`);
-    await evaluate(d.ps, `document.getElementById("addSelected").click()`);
-    for (let i = 0; i < 40 && !(await evaluate(d.ps, `!document.getElementById("addSelected").disabled || !document.querySelectorAll("#resultsList input.pick:checked").length`)); i++) await sleep(250);
-    await sleep(600);
-    const afterFirst = await stored();
-    const shotKeys = afterFirst.map((i) => i.shot).filter(Boolean);
-    const shotSizes = await bg(`chrome.storage.session.get(${JSON.stringify(shotKeys)}).then(d => Promise.all(Object.values(d).map(u => fetch(u).then(r => r.blob()).then(b => createImageBitmap(b)).then(i => i.width + "×" + i.height))))`);
-    const direct = await bg(`handlers["qa:captureFindings"]({ tabId: ${tabId}, targets: [{ id: "x", target: { selector: "#clipped" }, severity: "high" }] }).then(r => ({ ok: r.ok, method: r.method, has: !!(r.shots && r.shots.x) }))`);
-    const { report: resp } = await scan(tabId, { categories: ["responsive"], viewports: [{ label: "Typical mobile", width: 375, height: 812, mobile: true }], merge: true });
-    const small = resp.results.find((r) => r.category === "responsive" && r.viewport && r.viewport.width === 375 && (r.ref || r.selector) && r.status !== "passed");
-    const smallTarget = small && { id: "m", target: { ref: small.ref, selector: small.selector }, severity: small.severity, viewport: { width: 375, height: 812, mobile: true } };
-    const mobileUrl = small ? await bg(`handlers["qa:captureFindings"](${JSON.stringify({ tabId, targets: [smallTarget] })}).then(r => (r.shots && r.shots.m) || null)`) : null;
-    const mobileShot = mobileUrl ? await bg(`fetch(${JSON.stringify(mobileUrl)}).then(x => x.blob()).then(b => createImageBitmap(b)).then(i => i.width + "×" + i.height)`) : null;
-    if (mobileUrl) fs.writeFileSync(path.join(OUT, "pdf-shot-375.jpg"), Buffer.from(mobileUrl.split(",")[1], "base64"));
-    const restoredWidth = await bg(`chrome.scripting.executeScript({ target: { tabId: ${tabId} }, func: () => innerWidth }).then(r => r[0].result)`);
-    const debuggerFree = await bg(`chrome.debugger.getTargets().then(ts => !ts.some(t => t.tabId === ${tabId} && t.attached))`);
-    const afterAddUi = await evaluate(d.ps, `({ count: document.getElementById("pdfTabCount").textContent, button: document.getElementById("addSelected").disabled, checked: document.querySelectorAll("#resultsList input.pick:checked").length })`);
-    await send("Target.closeTarget", { targetId: d.targetId });
-
-    await bg(`chrome.tabs.update(${tabId}, { url: "${BASE}/clean.html" }).then(() => new Promise(res => {
-      const l = (id, info) => { if (id === ${tabId} && info.status === "complete") { chrome.tabs.onUpdated.removeListener(l); res(); } };
-      chrome.tabs.onUpdated.addListener(l);
-    }))`);
-    await sleep(500);
-    const reportGone = await bg(`chrome.storage.session.get("report:${tabId}").then(d => !d["report:${tabId}"])`);
-    const keptAfterNavigation = (await stored()).length;
-    await scan(tabId, { categories: ["accessibility"] });
-    d = await openDashboard(tabId);
-    const secondPage = await evaluate(d.ps, `(() => {
-      document.getElementById("selectShown").click();
-      return { selected: document.querySelectorAll("#resultsList input.pick:checked").length, shown: document.querySelectorAll("#resultsList .result").length };
-    })()`);
-    await bg(`chrome.tabs.update(${tabId}, { active: true })`);
-    await evaluate(d.ps, `document.getElementById("addSelected").click()`);
-    for (let i = 0; i < 120 && (await evaluate(d.ps, `document.querySelectorAll("#resultsList input.pick:checked").length`)); i++) await sleep(250);
-    await sleep(600);
-    const afterSecond = await stored();
-    await evaluate(d.ps, `document.querySelector('[data-view="pdf"]').click(); document.querySelectorAll("#pdfPages details").forEach(x => (x.open = true)); scrollTo(0, 0)`);
-    await sleep(300);
-    const pdfTab = await evaluate(d.ps, `({ pages: document.querySelectorAll("#pdfPages details.pdf-page").length, rows: document.querySelectorAll("#pdfPages .result").length, summary: document.getElementById("pdfSummary").textContent, download: !document.getElementById("downloadPdf").disabled })`);
-    const shot = await send("Page.captureScreenshot", { format: "png" }, d.ps);
-    fs.writeFileSync(path.join(OUT, "dashboard-pdf.png"), Buffer.from(shot.data, "base64"));
-
-    const { targetId: reportTarget } = await send("Target.createTarget", { url: `chrome-extension://${extId}/report.html` });
-    const rs = (await send("Target.attachToTarget", { targetId: reportTarget, flatten: true })).sessionId;
-    listeners.push((m) => {
-      if (m.sessionId === rs && m.method === "Runtime.exceptionThrown") errors.push(m.params.exceptionDetails.exception?.description || m.params.exceptionDetails.text);
-    });
-    await send("Runtime.enable", {}, rs);
-    await sleep(1200);
-    const report = await evaluate(rs, `({
-      title: document.title,
-      heading: document.querySelector("h1") && document.querySelector("h1").textContent,
-      pages: [...document.querySelectorAll("section.page h2")].map(h => h.textContent),
-      findings: document.querySelectorAll("article.finding").length,
-      fixes: document.querySelectorAll("article.finding dd.fix").length,
-      shots: [...document.querySelectorAll("article.finding figure.shot img")].filter(i => i.complete && i.naturalWidth > 0).length,
-    })`);
-    await send("Emulation.setDeviceMetricsOverride", { width: 900, height: 1200, deviceScaleFactor: 1, mobile: false }, rs);
-    const reportShot = await send("Page.captureScreenshot", { format: "png" }, rs);
-    fs.writeFileSync(path.join(OUT, "pdf-report-page.png"), Buffer.from(reportShot.data, "base64"));
-    const pdf = await send("Page.printToPDF", { printBackground: true }, rs);
-    const pdfBytes = Buffer.from(pdf.data, "base64");
-    fs.writeFileSync(path.join(OUT, "pdf-report.pdf"), pdfBytes);
-    await send("Target.closeTarget", { targetId: reportTarget });
-
-    await evaluate(d.ps, `document.getElementById("clearPdf").click()`);
-    await sleep(500);
-    const afterClear = (await stored()).length;
-    await send("Target.closeTarget", { targetId: d.targetId });
-    await bg(`chrome.tabs.remove(${tabId})`);
-    const pageCount = new Set(afterSecond.map((i) => i.page.url)).size;
-    record("PDF report across pages", [
-      [picked.boxes > 2 && picked.enabled && /\(2\)/.test(picked.button), `findings have tick boxes (${picked.boxes}); button reads “${picked.button}”`],
-      [afterFirst.length === 2 && afterAddUi.count === "2" && afterAddUi.button && afterAddUi.checked === 0, `2 findings stored, tab badge ${afterAddUi.count}, selection cleared`],
-      [shotKeys.length === 2 && shotSizes.length === 2 && shotSizes.every((s) => /^\d+×\d+$/.test(s) && !s.startsWith("0")), `a screenshot of the highlighted element is stored with each finding (${shotSizes.join(", ")})`],
-      [direct.ok && direct.has, `direct capture of #clipped works (method: ${direct.method})`],
-      [!!mobileShot && restoredWidth > 1000 && debuggerFree, `a 375×812 finding (“${small && small.name}”) is photographed at that size (${mobileShot}); afterwards innerWidth ${restoredWidth}, debugger detached ${debuggerFree}`],
-      [reportGone && keptAfterNavigation === 2, `after navigating, the page report is cleared (${reportGone}) but the PDF list keeps ${keptAfterNavigation}`],
-      [secondPage.selected === secondPage.shown && secondPage.shown > 0, `“Select all shown” ticked ${secondPage.selected} of ${secondPage.shown} on the second page`],
-      [afterSecond.length === 2 + secondPage.shown && pageCount === 2, `PDF list has ${afterSecond.length} findings from ${pageCount} pages`],
-      [pdfTab.pages === 2 && pdfTab.rows === afterSecond.length && pdfTab.download, `PDF report tab: ${pdfTab.summary}`],
-      [report.pages.length === 2 && report.findings === afterSecond.length && /^Website audit report \d{4}-\d{2}-\d{2}$/.test(report.title), `report page: “${report.heading}”, pages ${report.pages.join(" | ")}, ${report.findings} findings, ${report.fixes} fixes; title “${report.title}”`],
-      [report.shots >= 2, `report shows ${report.shots} screenshot(s) under their findings`],
-      [pdfBytes.subarray(0, 5).toString() === "%PDF-" && pdfBytes.length > 5000, `printed PDF is ${pdfBytes.length} bytes (tests/browser/output/pdf-report.pdf)`],
-      [afterClear === 0, "Clear the list empties it"],
-      [errors.length === 0, `no page errors${errors.length ? ": " + errors.join(" | ") : ""}`],
-    ]);
   }
 
-  // 9. Chrome Web Store screenshots (1280×800) of the real extension on a demo shop page.
+  // Chrome Web Store screenshots (1280×800) of the real extension on a demo shop page.
   {
     const STORE = path.join(ROOT, "store/screenshots");
     fs.mkdirSync(STORE, { recursive: true });
-    const tabId = await openTab(`${BASE}/store-demo.html`);
+    await bg(`handlers["qa:setConsent"]({ accepted: true })`);
+    const tabId = await openTab(`${STORE_BASE}/store-demo.html`);
     await scan(tabId, {});
     const pageTarget = (await send("Target.getTargets")).targetInfos.find((t) => t.type === "page" && t.url.endsWith("/store-demo.html"));
     const pg = (await send("Target.attachToTarget", { targetId: pageTarget.targetId, flatten: true })).sessionId;
@@ -656,7 +549,7 @@ try {
     await evaluate(ps, `document.querySelectorAll("#seoChecks details.group").forEach(d => (d.open = !d.classList.contains("group-info"))); scrollTo(0, 0)`);
     await sleep(300);
     saved.push(await shoot(ps, "4-search-appearance.png"));
-    await evaluate(ps, `document.querySelector('[data-view="settings"]').click(); scrollTo(0, 0)`);
+    await evaluate(ps, `document.querySelector('[data-view="settings"]').click(); document.querySelector(".advanced-settings").open = true; scrollTo(0, 0)`);
     await sleep(300);
     saved.push(await shoot(ps, "5-settings-disclosures.png"));
     const sizes = saved.map((n) => {
