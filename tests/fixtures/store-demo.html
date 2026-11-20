@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Northwind Outdoor Gear – Tents, Backpacks and Camping Equipment</title>
+  <meta property="og:image" content="/icons/main.png">
+  <!-- Demo page for store screenshots: a tidy shop page with a few deliberate defects. -->
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #1f2937; background: #f8fafc; }
+    header { display: flex; align-items: center; gap: 32px; padding: 16px 40px; background: #14532d; color: #fff; }
+    header .logo { font-weight: 700; font-size: 20px; }
+    header nav a { color: #dcfce7; margin-right: 20px; text-decoration: none; }
+    .hero { padding: 40px; background: linear-gradient(120deg, #dcfce7, #f0fdf4); }
+    .hero h1 { margin: 0 0 8px; font-size: 34px; }
+    .hero p { margin: 0; max-width: 640px; color: #374151; }
+    main { padding: 24px 40px 48px; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; }
+    .card img { width: 100%; height: 140px; object-fit: contain; background: #f1f5f9; border-radius: 8px; }
+    .card h2 { font-size: 18px; margin: 12px 0 4px; }
+    .card .title-box { height: 26px; overflow: hidden; }
+    .card .price { font-weight: 700; color: #166534; }
+    .card a.btn { display: inline-block; margin-top: 8px; padding: 6px 14px; background: #166534; color: #fff; border-radius: 8px; text-decoration: none; }
+    .newsletter { margin-top: 32px; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; display: flex; gap: 12px; align-items: center; }
+    .newsletter input { padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; width: 280px; }
+    .newsletter button { padding: 8px 16px; background: #166534; color: #fff; border: 0; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Northwind Outdoor</div>
+    <nav><a href="clean.html">Tents</a><a href="clean.html">Backpacks</a><a href="clean.html">Sale</a></nav>
+  </header>
+  <section class="hero">
+    <h1>Gear for every trail</h1>
+    <p>Lightweight tents, packs and camp kitchens tested on real trips. Free returns within 30 days.</p>
+  </section>
+  <main>
+    <h2>Best sellers</h2>
+    <div class="grid">
+      <article class="card">
+        <img src="/icons/main.png" alt="Ridgeline 2-person tent" width="128" height="128">
+        <h2>Ridgeline 2-person tent</h2>
+        <div class="price">$249</div>
+        <a class="btn" href="clean.html">View tent</a>
+      </article>
+      <article class="card">
+        <img src="/icons/main.png" width="128" height="128">
+        <h2 class="title-box">Summit 45-litre hiking backpack with rain cover and hydration sleeve</h2>
+        <div class="price">$139</div>
+        <a class="btn">View backpack</a>
+      </article>
+      <article class="card">
+        <img src="/icons/main.png" alt="Trail stove" width="128" height="128">
+        <h2>Trail stove</h2>
+        <div class="price">$59</div>
+        <a class="btn" href="clean.html">View stove</a>
+      </article>
+    </div>
+    <form class="newsletter" action="#" onsubmit="return false">
+      <strong>Trail tips every month</strong>
+      <input type="text" name="email" placeholder="Your email">
+      <button type="submit">Subscribe</button>
+    </form>
+  </main>
+</body>
+</html>

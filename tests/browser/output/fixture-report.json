@@ -1,0 +1,1759 @@
+{
+  "meta": {
+    "url": "http://127.0.0.1:63670/tests/fixtures/",
+    "title": "Fixture suite",
+    "startedAt": "2026-10-14T06:19:15.554Z",
+    "durationMs": 0,
+    "extensionVersion": "3.0.0",
+    "viewportsTested": [
+      {
+        "label": "Small mobile",
+        "width": 320,
+        "height": 568,
+        "method": "emulation"
+      }
+    ]
+  },
+  "categories": {},
+  "results": [
+    {
+      "testId": "interactions.blocked",
+      "status": "failed",
+      "severity": "high",
+      "verification": "verified",
+      "selector": "#covered",
+      "message": "Centre of this control is covered by body > main > div.covered-wrap:nth-of-type(2) > div.overlay; clicks land on the covering element.",
+      "category": "interactions",
+      "name": "interactions.blocked",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#covered"
+        }
+      ]
+    },
+    {
+      "testId": "interactions.no-name",
+      "status": "failed",
+      "severity": "high",
+      "verification": "verified",
+      "selector": "#product-1 > button.fav",
+      "message": "button has no accessible name; screen readers announce only \"button\".",
+      "category": "interactions",
+      "name": "interactions.no-name",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#product-1 > button.fav"
+        }
+      ]
+    },
+    {
+      "testId": "interactions.no-name",
+      "status": "failed",
+      "severity": "high",
+      "verification": "verified",
+      "selector": "#tiles > li.tile:nth-of-type(1) > button",
+      "message": "button has no accessible name; screen readers announce only \"button\".",
+      "category": "interactions",
+      "name": "interactions.no-name",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#tiles > li.tile:nth-of-type(1) > button"
+        }
+      ]
+    },
+    {
+      "testId": "interactions.no-name",
+      "status": "failed",
+      "severity": "high",
+      "verification": "verified",
+      "selector": "#close-x",
+      "message": "button has no accessible name; screen readers announce only \"button\".",
+      "category": "interactions",
+      "name": "interactions.no-name",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#close-x"
+        }
+      ]
+    },
+    {
+      "testId": "interactions.no-name",
+      "status": "failed",
+      "severity": "high",
+      "verification": "verified",
+      "selector": "#iconbtn",
+      "message": "button has no accessible name; screen readers announce only \"button\".",
+      "category": "interactions",
+      "name": "interactions.no-name",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#iconbtn"
+        }
+      ]
+    },
+    {
+      "testId": "layout.horizontal-overflow",
+      "status": "failed",
+      "severity": "high",
+      "verification": "verified",
+      "selector": "html",
+      "message": "The page scrolls horizontally: document is 2416px wide in a 1264px viewport.",
+      "category": "layout",
+      "name": "layout.horizontal-overflow",
+      "occurrences": 2,
+      "instances": [
+        {
+          "selector": "html"
+        }
+      ]
+    },
+    {
+      "testId": "layout.outside-viewport",
+      "status": "failed",
+      "severity": "high",
+      "verification": "verified",
+      "selector": "#too-wide",
+      "message": "Extends 1152px beyond the viewport and causes horizontal scrolling.",
+      "category": "layout",
+      "name": "layout.outside-viewport",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#too-wide"
+        }
+      ]
+    },
+    {
+      "testId": "layout.outside-viewport",
+      "status": "failed",
+      "severity": "high",
+      "verification": "verified",
+      "selector": "#pricing",
+      "message": "Extends 296px beyond the viewport and causes horizontal scrolling.",
+      "vp": 320,
+      "category": "layout",
+      "name": "layout.outside-viewport",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#pricing"
+        }
+      ]
+    },
+    {
+      "testId": "links.internal-http",
+      "status": "failed",
+      "severity": "high",
+      "verification": "verified",
+      "selector": "#missingpage",
+      "message": "Same-origin link returns HTTP 404.",
+      "category": "links",
+      "name": "links.internal-http",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#missingpage"
+        }
+      ]
+    },
+    {
+      "testId": "links.no-name",
+      "status": "failed",
+      "severity": "high",
+      "verification": "verified",
+      "selector": "#noname",
+      "message": "Link has no accessible name (no text, alt text or aria-label). Screen readers announce only the URL or \"link\".",
+      "category": "links",
+      "name": "links.no-name",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#noname"
+        }
+      ]
+    },
+    {
+      "testId": "a11y.aria-references",
+      "status": "failed",
+      "severity": "medium",
+      "verification": "verified",
+      "selector": "#unlabeled-field",
+      "message": "aria-describedby references missing id(s): \"missing-description\".",
+      "category": "accessibility",
+      "name": "a11y.aria-references",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#unlabeled-field"
+        }
+      ]
+    },
+    {
+      "testId": "images.broken",
+      "status": "failed",
+      "severity": "medium",
+      "verification": "verified",
+      "selector": "#broken",
+      "message": "Image failed to load (HTTP 404).",
+      "category": "images",
+      "name": "images.broken",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#broken"
+        }
+      ]
+    },
+    {
+      "testId": "images.distorted",
+      "status": "failed",
+      "severity": "medium",
+      "verification": "verified",
+      "selector": "#stretched",
+      "message": "Image is stretched: natural ratio 2 vs rendered ratio 1 (50% off) with object-fit: fill.",
+      "category": "images",
+      "name": "images.distorted",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#stretched"
+        }
+      ]
+    },
+    {
+      "testId": "images.missing-alt",
+      "status": "failed",
+      "severity": "medium",
+      "verification": "verified",
+      "selector": "#noalt",
+      "message": "Image has no alt attribute; screen readers may announce the file name.",
+      "category": "images",
+      "name": "images.missing-alt",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#noalt"
+        }
+      ]
+    },
+    {
+      "testId": "images.missing-alt",
+      "status": "failed",
+      "severity": "medium",
+      "verification": "verified",
+      "selector": "#product-1 > img",
+      "message": "Image has no alt attribute; screen readers may announce the file name.",
+      "category": "images",
+      "name": "images.missing-alt",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#product-1 > img"
+        }
+      ]
+    },
+    {
+      "testId": "interactions.non-semantic-clickable",
+      "status": "failed",
+      "severity": "medium",
+      "verification": "verified",
+      "selector": "#fake",
+      "message": "<div> has an onclick handler but no role or tabindex: it works with a mouse only.",
+      "category": "interactions",
+      "name": "interactions.non-semantic-clickable",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#fake"
+        }
+      ]
+    },
+    {
+      "testId": "layout.text-clipped",
+      "status": "failed",
+      "severity": "medium",
+      "verification": "verified",
+      "selector": "#clipped",
+      "message": "Text is clipped by overflow: 56px vertically.",
+      "category": "layout",
+      "name": "layout.text-clipped",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#clipped"
+        }
+      ]
+    },
+    {
+      "testId": "links.broken-fragment",
+      "status": "failed",
+      "severity": "low",
+      "verification": "verified",
+      "selector": "#badfrag",
+      "message": "In-page anchor \"#no-such-section\" has no matching id or name on this page.",
+      "category": "links",
+      "name": "links.broken-fragment",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#badfrag"
+        }
+      ]
+    },
+    {
+      "testId": "links.broken-fragment",
+      "status": "failed",
+      "severity": "low",
+      "verification": "verified",
+      "selector": "#bg-home",
+      "message": "In-page anchor \"#home\" has no matching id or name on this page.",
+      "category": "links",
+      "name": "links.broken-fragment",
+      "occurrences": 2,
+      "instances": [
+        {
+          "selector": "#bg-home"
+        }
+      ]
+    },
+    {
+      "testId": "links.broken-fragment",
+      "status": "failed",
+      "severity": "low",
+      "verification": "verified",
+      "selector": "#bg-shop",
+      "message": "In-page anchor \"#shop\" has no matching id or name on this page.",
+      "category": "links",
+      "name": "links.broken-fragment",
+      "occurrences": 2,
+      "instances": [
+        {
+          "selector": "#bg-shop"
+        }
+      ]
+    },
+    {
+      "testId": "links.broken-fragment",
+      "status": "failed",
+      "severity": "low",
+      "verification": "verified",
+      "selector": "#bg-l1",
+      "message": "In-page anchor \"#one\" has no matching id or name on this page.",
+      "category": "links",
+      "name": "links.broken-fragment",
+      "occurrences": 2,
+      "instances": [
+        {
+          "selector": "#bg-l1"
+        }
+      ]
+    },
+    {
+      "testId": "a11y.focus-visible",
+      "status": "warning",
+      "severity": "medium",
+      "verification": "inferred",
+      "selector": "#iconbtn",
+      "message": "No style change detected on programmatic focus (outline, shadow, border, background, colour). Styles on child/pseudo elements are not detected — confirm with the keyboard.",
+      "category": "accessibility",
+      "name": "a11y.focus-visible",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#iconbtn"
+        }
+      ]
+    },
+    {
+      "testId": "a11y.focus-visible",
+      "status": "warning",
+      "severity": "medium",
+      "verification": "inferred",
+      "selector": "#tiny",
+      "message": "No style change detected on programmatic focus (outline, shadow, border, background, colour). Styles on child/pseudo elements are not detected — confirm with the keyboard.",
+      "category": "accessibility",
+      "name": "a11y.focus-visible",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#tiny"
+        }
+      ]
+    },
+    {
+      "testId": "a11y.focus-visible",
+      "status": "warning",
+      "severity": "medium",
+      "verification": "inferred",
+      "selector": "#covered",
+      "message": "No style change detected on programmatic focus (outline, shadow, border, background, colour). Styles on child/pseudo elements are not detected — confirm with the keyboard.",
+      "category": "accessibility",
+      "name": "a11y.focus-visible",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#covered"
+        }
+      ]
+    },
+    {
+      "testId": "a11y.focus-visible",
+      "status": "warning",
+      "severity": "medium",
+      "verification": "inferred",
+      "selector": "#faq > summary",
+      "message": "No style change detected on programmatic focus (outline, shadow, border, background, colour). Styles on child/pseudo elements are not detected — confirm with the keyboard.",
+      "category": "accessibility",
+      "name": "a11y.focus-visible",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#faq > summary"
+        }
+      ]
+    },
+    {
+      "testId": "a11y.focus-visible",
+      "status": "warning",
+      "severity": "medium",
+      "verification": "inferred",
+      "selector": "#delete",
+      "message": "No style change detected on programmatic focus (outline, shadow, border, background, colour). Styles on child/pseudo elements are not detected — confirm with the keyboard.",
+      "category": "accessibility",
+      "name": "a11y.focus-visible",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#delete"
+        }
+      ]
+    },
+    {
+      "testId": "a11y.focus-visible",
+      "status": "warning",
+      "severity": "medium",
+      "verification": "inferred",
+      "selector": "#unlabeled-field",
+      "message": "No style change detected on programmatic focus (outline, shadow, border, background, colour). Styles on child/pseudo elements are not detected — confirm with the keyboard.",
+      "category": "accessibility",
+      "name": "a11y.focus-visible",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#unlabeled-field"
+        }
+      ]
+    },
+    {
+      "testId": "forms.interactive-validation",
+      "status": "warning",
+      "severity": "medium",
+      "verification": "verified",
+      "selector": "#email-as-text",
+      "message": "Invalid value was not flagged: no invalid event, no aria-invalid/error class and no message near the field; the form tried to send it (blocked).",
+      "category": "forms",
+      "name": "forms.interactive-validation",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#email-as-text"
+        }
+      ]
+    },
+    {
+      "testId": "forms.labels",
+      "status": "warning",
+      "severity": "medium",
+      "verification": "verified",
+      "selector": "#nolabel",
+      "message": "Field is named only by its placeholder (\"Nickname\"); the hint disappears while typing and is often low-contrast.",
+      "category": "forms",
+      "name": "forms.labels",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#nolabel"
+        }
+      ]
+    },
+    {
+      "testId": "forms.native-constraints",
+      "status": "warning",
+      "severity": "medium",
+      "verification": "verified",
+      "selector": "#email-as-text",
+      "message": "Email-like field accepts \"not-an-email\" under native validation. Custom script validation may still catch it — verify with interactive mode.",
+      "category": "forms",
+      "name": "forms.native-constraints",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#email-as-text"
+        }
+      ]
+    },
+    {
+      "testId": "forms.submit-mechanism",
+      "status": "warning",
+      "severity": "medium",
+      "verification": "inferred",
+      "selector": "#nosubmit",
+      "message": "Form has 2 text-like fields and no submit button, so pressing Enter does not submit it (HTML implicit submission rule). Script-driven buttons may exist but are not type=submit.",
+      "category": "forms",
+      "name": "forms.submit-mechanism",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#nosubmit"
+        }
+      ]
+    },
+    {
+      "testId": "interactions.overlap",
+      "status": "warning",
+      "severity": "medium",
+      "verification": "verified",
+      "selector": "#m-cancel",
+      "message": "Overlaps #m-ok by 40×48px; one of them cannot be clicked reliably.",
+      "category": "interactions",
+      "name": "interactions.overlap",
+      "occurrences": 2,
+      "instances": [
+        {
+          "selector": "#m-cancel"
+        }
+      ]
+    },
+    {
+      "testId": "layout.overlapping-siblings",
+      "status": "warning",
+      "severity": "medium",
+      "verification": "inferred",
+      "selector": "#second",
+      "message": "Overlaps its sibling #first by 120×64px (56% of the smaller box).",
+      "category": "layout",
+      "name": "layout.overlapping-siblings",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#second"
+        }
+      ]
+    },
+    {
+      "testId": "layout.overlapping-siblings",
+      "status": "warning",
+      "severity": "medium",
+      "verification": "inferred",
+      "selector": "#m-cancel",
+      "message": "Overlaps its sibling #m-ok by 40×48px (38% of the smaller box).",
+      "category": "layout",
+      "name": "layout.overlapping-siblings",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#m-cancel"
+        }
+      ]
+    },
+    {
+      "testId": "links.malformed",
+      "status": "warning",
+      "severity": "medium",
+      "verification": "verified",
+      "selector": "#malformed",
+      "message": "Suspicious URL: malformed scheme separator.",
+      "category": "links",
+      "name": "links.malformed",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#malformed"
+        }
+      ]
+    },
+    {
+      "testId": "links.no-destination",
+      "status": "warning",
+      "severity": "medium",
+      "verification": "inferred",
+      "selector": "#placeholder",
+      "message": "Link has href=\"#\" — no destination. Script handlers (if any) cannot be detected, so verify it does something.",
+      "category": "links",
+      "name": "links.no-destination",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#placeholder"
+        }
+      ]
+    },
+    {
+      "testId": "links.no-destination",
+      "status": "warning",
+      "severity": "medium",
+      "verification": "inferred",
+      "selector": "#jsvoid",
+      "message": "Link has href=\"javascript:void(0)\" — no destination. Script handlers (if any) cannot be detected, so verify it does something.",
+      "category": "links",
+      "name": "links.no-destination",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#jsvoid"
+        }
+      ]
+    },
+    {
+      "testId": "responsive.essential-hidden",
+      "status": "warning",
+      "severity": "medium",
+      "verification": "inferred",
+      "selector": "body",
+      "message": "2 of 3 key elements visible at 1264px are not visible at 616px and no menu toggle was detected; essential functionality may be unavailable at this width.",
+      "vp": 320,
+      "category": "responsive",
+      "name": "responsive.essential-hidden",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "body"
+        }
+      ]
+    },
+    {
+      "testId": "search.controlled-query",
+      "status": "warning",
+      "severity": "medium",
+      "verification": "verified",
+      "selector": "#q",
+      "message": "Search for \"laptop\" shows \"Nothing found\". If the site has content containing \"laptop\", search is not working. Set a query that definitely exists on the site in Settings → Test query and re-run.",
+      "category": "search",
+      "name": "search.controlled-query",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#q"
+        }
+      ]
+    },
+    {
+      "testId": "a11y.duplicate-ids",
+      "status": "warning",
+      "severity": "low",
+      "verification": "verified",
+      "selector": "body > main > div:nth-of-type(5)",
+      "message": "id \"dupe\" is used 2 times.",
+      "category": "accessibility",
+      "name": "a11y.duplicate-ids",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "body > main > div:nth-of-type(5)"
+        }
+      ]
+    },
+    {
+      "testId": "a11y.headings",
+      "status": "warning",
+      "severity": "low",
+      "verification": "verified",
+      "selector": "#skipped-heading",
+      "message": "Heading level jumps from h1 to h4.",
+      "category": "accessibility",
+      "name": "a11y.headings",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#skipped-heading"
+        }
+      ]
+    },
+    {
+      "testId": "forms.input-types",
+      "status": "warning",
+      "severity": "low",
+      "verification": "inferred",
+      "selector": "#email-as-text",
+      "message": "Field looks like an email field but is type=\"text\" — no native validation and no matching mobile keyboard.",
+      "category": "forms",
+      "name": "forms.input-types",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#email-as-text"
+        }
+      ]
+    },
+    {
+      "testId": "forms.interactive-validation",
+      "status": "warning",
+      "severity": "low",
+      "verification": "inferred",
+      "selector": "#code",
+      "message": "1 field(s) rejected the extension's valid-looking sample values (may be stricter business rules).",
+      "category": "forms",
+      "name": "forms.interactive-validation",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#code"
+        }
+      ]
+    },
+    {
+      "testId": "images.alt-quality",
+      "status": "warning",
+      "severity": "low",
+      "verification": "inferred",
+      "selector": "#filename-alt",
+      "message": "Alt text \"IMG_1234.jpg\" looks like a file name or generic placeholder.",
+      "category": "images",
+      "name": "images.alt-quality",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#filename-alt"
+        }
+      ]
+    },
+    {
+      "testId": "links.ambiguous-text",
+      "status": "warning",
+      "severity": "low",
+      "verification": "inferred",
+      "selector": "#ambiguous",
+      "message": "Link text \"click here\" does not describe its destination. It can be acceptable when the surrounding sentence or heading gives the context — verify.",
+      "category": "links",
+      "name": "links.ambiguous-text",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#ambiguous"
+        }
+      ]
+    },
+    {
+      "testId": "links.ambiguous-text",
+      "status": "warning",
+      "severity": "low",
+      "verification": "verified",
+      "selector": "#bg-l1",
+      "message": "8 links share the text \"details\" but lead to different destinations; out of context they are indistinguishable.",
+      "category": "links",
+      "name": "links.ambiguous-text",
+      "occurrences": 2,
+      "instances": [
+        {
+          "selector": "#bg-l1"
+        }
+      ]
+    },
+    {
+      "testId": "forms.server-response",
+      "status": "manual",
+      "severity": "low",
+      "verification": "manual",
+      "selector": null,
+      "message": "Whether a form actually saves data, sends email or shows a correct success/failure message can only be verified by submitting it in a test environment and checking the backend. A missing visible error after clicking submit does not prove success.",
+      "category": "forms",
+      "name": "forms.server-response",
+      "occurrences": 3,
+      "instances": []
+    },
+    {
+      "testId": "a11y.aria-references",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "All id references resolve.",
+      "category": "accessibility",
+      "name": "a11y.aria-references",
+      "occurrences": 1,
+      "instances": []
+    },
+    {
+      "testId": "a11y.dialogs",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No open dialogs with missing names.",
+      "category": "accessibility",
+      "name": "a11y.dialogs",
+      "occurrences": 2,
+      "instances": []
+    },
+    {
+      "testId": "a11y.duplicate-ids",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No duplicate ids.",
+      "category": "accessibility",
+      "name": "a11y.duplicate-ids",
+      "occurrences": 1,
+      "instances": []
+    },
+    {
+      "testId": "a11y.headings",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "Heading levels are sequential with an h1.",
+      "category": "accessibility",
+      "name": "a11y.headings",
+      "occurrences": 1,
+      "instances": []
+    },
+    {
+      "testId": "a11y.hidden-focusable",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No focusable elements inside aria-hidden regions.",
+      "category": "accessibility",
+      "name": "a11y.hidden-focusable",
+      "occurrences": 2,
+      "instances": []
+    },
+    {
+      "testId": "a11y.landmarks",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "A main landmark exists.",
+      "category": "accessibility",
+      "name": "a11y.landmarks",
+      "occurrences": 2,
+      "instances": []
+    },
+    {
+      "testId": "a11y.lang",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "lang=\"en\"",
+      "category": "accessibility",
+      "name": "a11y.lang",
+      "occurrences": 2,
+      "instances": []
+    },
+    {
+      "testId": "a11y.positive-tabindex",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No positive tabindex values.",
+      "category": "accessibility",
+      "name": "a11y.positive-tabindex",
+      "occurrences": 2,
+      "instances": []
+    },
+    {
+      "testId": "a11y.roles",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "Roles are valid and composite widgets are structured correctly.",
+      "category": "accessibility",
+      "name": "a11y.roles",
+      "occurrences": 2,
+      "instances": []
+    },
+    {
+      "testId": "a11y.title",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "Title: \"Clean static page\"",
+      "category": "accessibility",
+      "name": "a11y.title",
+      "occurrences": 2,
+      "instances": []
+    },
+    {
+      "testId": "a11y.zoom",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "Viewport meta tag allows zooming.",
+      "category": "accessibility",
+      "name": "a11y.zoom",
+      "occurrences": 2,
+      "instances": []
+    },
+    {
+      "testId": "elements.dom-stats",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "36 elements, max depth 6, 0 absolute and 0 fixed elements (informational).",
+      "category": "elements",
+      "name": "elements.dom-stats",
+      "occurrences": 1,
+      "instances": []
+    },
+    {
+      "testId": "elements.empty-containers",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No large empty containers.",
+      "category": "elements",
+      "name": "elements.empty-containers",
+      "occurrences": 1,
+      "instances": []
+    },
+    {
+      "testId": "elements.wider-than-parent",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No in-flow element spills out of its parent.",
+      "category": "elements",
+      "name": "elements.wider-than-parent",
+      "occurrences": 1,
+      "instances": []
+    },
+    {
+      "testId": "forms.error-association",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "forms",
+      "name": "forms.error-association",
+      "occurrences": 3,
+      "instances": []
+    },
+    {
+      "testId": "forms.field-names",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "forms",
+      "name": "forms.field-names",
+      "occurrences": 3,
+      "instances": []
+    },
+    {
+      "testId": "forms.field-operable",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "forms",
+      "name": "forms.field-operable",
+      "occurrences": 3,
+      "instances": []
+    },
+    {
+      "testId": "forms.input-types",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "forms",
+      "name": "forms.input-types",
+      "occurrences": 2,
+      "instances": []
+    },
+    {
+      "testId": "forms.interactive-validation",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": "#signup",
+      "message": "Empty submission was stopped and validation feedback appeared: 1 native invalid event(s).",
+      "category": "forms",
+      "name": "forms.interactive-validation",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#signup"
+        }
+      ]
+    },
+    {
+      "testId": "forms.interactive-validation",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": "#nosubmit",
+      "message": "With valid sample values the form passed client-side validation and tried to send a native submission; it was blocked by the extension, so nothing was sent. Server-side handling was NOT tested.",
+      "category": "forms",
+      "name": "forms.interactive-validation",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#nosubmit"
+        }
+      ]
+    },
+    {
+      "testId": "forms.interactive-validation",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": "#implicit",
+      "message": "With valid sample values the form passed client-side validation and tried to send a native submission; it was blocked by the extension, so nothing was sent. Server-side handling was NOT tested.",
+      "category": "forms",
+      "name": "forms.interactive-validation",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#implicit"
+        }
+      ]
+    },
+    {
+      "testId": "forms.interactive-validation",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": "#contact",
+      "message": "Empty submission was stopped and validation feedback appeared: 2 message(s) appeared: \"Please fill in this field\", \"Please fill in this field\".",
+      "category": "forms",
+      "name": "forms.interactive-validation",
+      "occurrences": 2,
+      "instances": [
+        {
+          "selector": "#contact"
+        }
+      ]
+    },
+    {
+      "testId": "forms.labels",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "forms",
+      "name": "forms.labels",
+      "occurrences": 2,
+      "instances": []
+    },
+    {
+      "testId": "forms.native-constraints",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "Native constraints behaved as configured on detached copies of 2 field(s). Nothing on the page was changed or submitted.",
+      "category": "forms",
+      "name": "forms.native-constraints",
+      "occurrences": 2,
+      "instances": []
+    },
+    {
+      "testId": "forms.password-autocomplete",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "forms",
+      "name": "forms.password-autocomplete",
+      "occurrences": 2,
+      "instances": []
+    },
+    {
+      "testId": "forms.required-constraint",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "forms",
+      "name": "forms.required-constraint",
+      "occurrences": 2,
+      "instances": []
+    },
+    {
+      "testId": "forms.submit-mechanism",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "forms",
+      "name": "forms.submit-mechanism",
+      "occurrences": 2,
+      "instances": []
+    },
+    {
+      "testId": "images.alt-quality",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "images",
+      "name": "images.alt-quality",
+      "occurrences": 2,
+      "instances": []
+    },
+    {
+      "testId": "images.background-broken",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "images",
+      "name": "images.background-broken",
+      "occurrences": 3,
+      "instances": []
+    },
+    {
+      "testId": "images.broken",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "images",
+      "name": "images.broken",
+      "occurrences": 2,
+      "instances": []
+    },
+    {
+      "testId": "images.distorted",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "images",
+      "name": "images.distorted",
+      "occurrences": 4,
+      "instances": []
+    },
+    {
+      "testId": "images.empty-alt-meaningful",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "images",
+      "name": "images.empty-alt-meaningful",
+      "occurrences": 3,
+      "instances": []
+    },
+    {
+      "testId": "images.missing-alt",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "images",
+      "name": "images.missing-alt",
+      "occurrences": 1,
+      "instances": []
+    },
+    {
+      "testId": "images.missing-dimensions",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "images",
+      "name": "images.missing-dimensions",
+      "occurrences": 3,
+      "instances": []
+    },
+    {
+      "testId": "images.missing-src",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "images",
+      "name": "images.missing-src",
+      "occurrences": 3,
+      "instances": []
+    },
+    {
+      "testId": "images.outside-container",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "images",
+      "name": "images.outside-container",
+      "occurrences": 5,
+      "instances": []
+    },
+    {
+      "testId": "images.oversized-source",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "images",
+      "name": "images.oversized-source",
+      "occurrences": 3,
+      "instances": []
+    },
+    {
+      "testId": "images.unexpectedly-large",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "images",
+      "name": "images.unexpectedly-large",
+      "occurrences": 5,
+      "instances": []
+    },
+    {
+      "testId": "images.upscaled",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "images",
+      "name": "images.upscaled",
+      "occurrences": 3,
+      "instances": []
+    },
+    {
+      "testId": "images.zero-size",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "images",
+      "name": "images.zero-size",
+      "occurrences": 5,
+      "instances": []
+    },
+    {
+      "testId": "interactions.aria-state",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "interactions",
+      "name": "interactions.aria-state",
+      "occurrences": 5,
+      "instances": []
+    },
+    {
+      "testId": "interactions.blocked",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "interactions",
+      "name": "interactions.blocked",
+      "occurrences": 6,
+      "instances": []
+    },
+    {
+      "testId": "interactions.button-type",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "interactions",
+      "name": "interactions.button-type",
+      "occurrences": 5,
+      "instances": []
+    },
+    {
+      "testId": "interactions.no-name",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "interactions",
+      "name": "interactions.no-name",
+      "occurrences": 3,
+      "instances": []
+    },
+    {
+      "testId": "interactions.non-semantic-clickable",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "interactions",
+      "name": "interactions.non-semantic-clickable",
+      "occurrences": 4,
+      "instances": []
+    },
+    {
+      "testId": "interactions.not-focusable",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "interactions",
+      "name": "interactions.not-focusable",
+      "occurrences": 5,
+      "instances": []
+    },
+    {
+      "testId": "interactions.overlap",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "interactions",
+      "name": "interactions.overlap",
+      "occurrences": 5,
+      "instances": []
+    },
+    {
+      "testId": "interactions.state-toggle",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No disclosure, accordion or tab widgets found.",
+      "category": "interactions",
+      "name": "interactions.state-toggle",
+      "occurrences": 5,
+      "instances": []
+    },
+    {
+      "testId": "interactions.zero-size",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "interactions",
+      "name": "interactions.zero-size",
+      "occurrences": 7,
+      "instances": []
+    },
+    {
+      "testId": "layout.collapsed-content",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No visible content collapsed to zero size.",
+      "category": "layout",
+      "name": "layout.collapsed-content",
+      "occurrences": 6,
+      "instances": []
+    },
+    {
+      "testId": "layout.content-overflow-fixed-height",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No fixed-height boxes spilling onto neighbours.",
+      "category": "layout",
+      "name": "layout.content-overflow-fixed-height",
+      "occurrences": 6,
+      "instances": []
+    },
+    {
+      "testId": "layout.horizontal-overflow",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "Document width 1249px fits the 1249px viewport.",
+      "category": "layout",
+      "name": "layout.horizontal-overflow",
+      "occurrences": 4,
+      "instances": []
+    },
+    {
+      "testId": "layout.obscured-by-fixed",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No full-width fixed header/footer bars found.",
+      "category": "layout",
+      "name": "layout.obscured-by-fixed",
+      "occurrences": 4,
+      "instances": []
+    },
+    {
+      "testId": "layout.overlapping-siblings",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No overlapping in-flow siblings.",
+      "category": "layout",
+      "name": "layout.overlapping-siblings",
+      "occurrences": 4,
+      "instances": []
+    },
+    {
+      "testId": "layout.overlay-beyond-viewport",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "Open dialogs, menus and popovers fit the viewport.",
+      "category": "layout",
+      "name": "layout.overlay-beyond-viewport",
+      "occurrences": 6,
+      "instances": []
+    },
+    {
+      "testId": "layout.text-clipped",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No clipped text found.",
+      "category": "layout",
+      "name": "layout.text-clipped",
+      "occurrences": 5,
+      "instances": []
+    },
+    {
+      "testId": "layout.text-overflow",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No text spilling outside its box.",
+      "category": "layout",
+      "name": "layout.text-overflow",
+      "occurrences": 6,
+      "instances": []
+    },
+    {
+      "testId": "links.ambiguous-text",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "links",
+      "name": "links.ambiguous-text",
+      "occurrences": 1,
+      "instances": []
+    },
+    {
+      "testId": "links.broken-fragment",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "links",
+      "name": "links.broken-fragment",
+      "occurrences": 1,
+      "instances": []
+    },
+    {
+      "testId": "links.covered",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "links",
+      "name": "links.covered",
+      "occurrences": 4,
+      "instances": []
+    },
+    {
+      "testId": "links.internal-http",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "2 of 3 same-origin URL(s) answered with HTTP 2xx/3xx.",
+      "category": "links",
+      "name": "links.internal-http",
+      "occurrences": 1,
+      "instances": []
+    },
+    {
+      "testId": "links.keyboard",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "links",
+      "name": "links.keyboard",
+      "occurrences": 4,
+      "instances": []
+    },
+    {
+      "testId": "links.malformed",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "links",
+      "name": "links.malformed",
+      "occurrences": 3,
+      "instances": []
+    },
+    {
+      "testId": "links.no-destination",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "links",
+      "name": "links.no-destination",
+      "occurrences": 3,
+      "instances": []
+    },
+    {
+      "testId": "links.no-name",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "links",
+      "name": "links.no-name",
+      "occurrences": 3,
+      "instances": []
+    },
+    {
+      "testId": "links.pointer-events",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "links",
+      "name": "links.pointer-events",
+      "occurrences": 4,
+      "instances": []
+    },
+    {
+      "testId": "links.target-blank",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "links",
+      "name": "links.target-blank",
+      "occurrences": 4,
+      "instances": []
+    },
+    {
+      "testId": "responsive.essential-hidden",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "All 3 key elements visible at 1264px are still visible.",
+      "vp": 1366,
+      "category": "responsive",
+      "name": "responsive.essential-hidden",
+      "occurrences": 1,
+      "instances": []
+    },
+    {
+      "testId": "responsive.inner-scroll",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No unexpected horizontal scrollers.",
+      "vp": 320,
+      "category": "responsive",
+      "name": "responsive.inner-scroll",
+      "occurrences": 2,
+      "instances": []
+    },
+    {
+      "testId": "search.button-state",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "search",
+      "name": "search.button-state",
+      "occurrences": 2,
+      "instances": []
+    },
+    {
+      "testId": "search.controlled-query",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": "#results > li:nth-of-type(1)",
+      "message": "Search works: \"test\" returned 2 visible result item(s) containing the query (page says \"2 results\"), e.g. \"Test tube\". Ranking and completeness still need a human check.",
+      "category": "search",
+      "name": "search.controlled-query",
+      "occurrences": 1,
+      "instances": [
+        {
+          "selector": "#results > li:nth-of-type(1)"
+        }
+      ]
+    },
+    {
+      "testId": "search.query-parameter",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "search",
+      "name": "search.query-parameter",
+      "occurrences": 2,
+      "instances": []
+    },
+    {
+      "testId": "search.submit-mechanism",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "search",
+      "name": "search.submit-mechanism",
+      "occurrences": 2,
+      "instances": []
+    },
+    {
+      "testId": "search.visibility",
+      "status": "passed",
+      "severity": "info",
+      "verification": "verified",
+      "selector": null,
+      "message": "No issues detected.",
+      "category": "search",
+      "name": "search.visibility",
+      "occurrences": 2,
+      "instances": []
+    }
+  ],
+  "limitations": [],
+  "schema": "web-qa-report/1",
+  "summary": {
+    "total": 121,
+    "byStatus": {
+      "failed": 21,
+      "warning": 25,
+      "manual": 1,
+      "passed": 74
+    },
+    "bySeverity": {
+      "critical": 0,
+      "high": 10,
+      "medium": 25,
+      "low": 12,
+      "info": 0
+    },
+    "byCategory": {
+      "interactions": {
+        "failed": 6,
+        "warning": 1,
+        "manual": 0,
+        "passed": 9
+      },
+      "layout": {
+        "failed": 4,
+        "warning": 2,
+        "manual": 0,
+        "passed": 8
+      },
+      "links": {
+        "failed": 6,
+        "warning": 5,
+        "manual": 0,
+        "passed": 10
+      },
+      "accessibility": {
+        "failed": 1,
+        "warning": 8,
+        "manual": 0,
+        "passed": 11
+      },
+      "images": {
+        "failed": 4,
+        "warning": 1,
+        "manual": 0,
+        "passed": 13
+      },
+      "forms": {
+        "failed": 0,
+        "warning": 6,
+        "manual": 1,
+        "passed": 13
+      },
+      "responsive": {
+        "failed": 0,
+        "warning": 1,
+        "manual": 0,
+        "passed": 2
+      },
+      "search": {
+        "failed": 0,
+        "warning": 1,
+        "manual": 0,
+        "passed": 5
+      },
+      "elements": {
+        "failed": 0,
+        "warning": 0,
+        "manual": 0,
+        "passed": 3
+      }
+    },
+    "byVerification": {
+      "verified": 104,
+      "inferred": 16,
+      "manual": 1
+    }
+  }
+}

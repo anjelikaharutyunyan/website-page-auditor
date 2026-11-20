@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Layout defects</title>
+  <style>
+    body { margin: 0; font: 16px/1.5 system-ui, sans-serif; }
+    main { padding: 80px 16px 16px; }
+    .site-header { position: fixed; top: 0; left: 0; right: 0; height: 56px; background: #111; color: #fff; z-index: 10; padding: 0 16px; display: flex; align-items: center; }
+    /* Defect: fixed-width block wider than any normal viewport. */
+    .too-wide { width: 2400px; height: 40px; background: #fde68a; }
+    /* Defect: text clipped by a fixed height + overflow hidden. */
+    .clipped { width: 220px; height: 40px; overflow: hidden; border: 1px solid #999; }
+    /* Intentional: single-line ellipsis is a design choice and must not be reported. */
+    .ellipsis { width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    /* Intentional: line-clamp, even with a box shorter than the clamped lines, must not be reported. */
+    .clamp { width: 200px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+    .clamp-short { height: 20px; }
+    .clamp-loose { width: 200px; height: 24px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+    /* Design choice: small text size is not reported. */
+    .tiny { font-size: 8px; }
+    /* Defect: two siblings overlapping because of a negative margin. */
+    .pair { display: flex; gap: 0; }
+    .pair > p { width: 200px; margin: 0; padding: 8px; background: #e0f2fe; }
+    .pair > p + p { margin-left: -120px; background: #fecaca; }
+    /* Intentional: carousel track with off-screen slides inside overflow hidden. */
+    .carousel { width: 300px; overflow: hidden; }
+    .track { display: flex; width: 1200px; transform: translateX(0); }
+    .slide { flex: 0 0 300px; height: 80px; background: #ddd; }
+    /* Intentional: off-canvas menu translated out of view and hidden. */
+    .drawer { position: fixed; top: 0; left: 0; width: 280px; height: 100vh; transform: translateX(-100%); visibility: hidden; background: #fff; }
+  </style>
+</head>
+<body>
+  <header class="site-header"><b>Brand</b></header>
+  <aside class="drawer" aria-hidden="true"><a href="#a">Hidden menu link</a></aside>
+  <main>
+    <h1>Layout defects fixture</h1>
+    <div class="too-wide" id="too-wide">This block is 2400px wide.</div>
+    <div class="clipped" id="clipped">This paragraph has far too much text to fit inside a fixed forty pixel tall box, so most of it is cut off.</div>
+    <div class="ellipsis" id="ellipsis">Intentionally truncated long product title text</div>
+    <div class="clamp clamp-short" id="clamp-short">A long product description clamped to two lines inside a box that is only twenty pixels tall, which is shorter than the text.</div>
+    <div class="clamp" id="clamp-wrap"><p style="margin:0" id="clamp-inner">A clamped wrapper around a paragraph with plenty of text so that only the first two lines remain visible to the user.</p></div>
+    <div class="clamp-loose" id="clamp-loose">Clamped to three lines without overflow hidden, in a box shorter than those lines, followed by another element on the page.</div>
+    <p id="after-clamp">Element after the clamped box.</p>
+    <p class="tiny" id="tiny">Tiny legal text that is hard to read.</p>
+    <div class="pair"><p id="first">First box with text content.</p><p id="second">Second box overlapping the first.</p></div>
+    <div class="carousel" aria-roledescription="carousel"><div class="track"><div class="slide">1</div><div class="slide">2</div><div class="slide">3</div><div class="slide">4</div></div></div>
+  </main>
+  <script type="application/json" id="qa-expect">
+    {
+      "categories": ["layout"],
+      "present": [
+        { "testId": "layout.horizontal-overflow", "status": "failed" },
+        { "testId": "layout.outside-viewport", "selectorIncludes": "too-wide" },
+        { "testId": "layout.text-clipped", "selectorIncludes": "clipped" },
+        { "testId": "layout.overlapping-siblings" }
+      ],
+      "absent": [
+        { "testId": "layout.text-truncated" },
+        { "testId": "layout.tiny-text" },
+        { "testId": "layout.outside-viewport", "selectorIncludes": "track" },
+        { "testId": "layout.outside-viewport", "selectorIncludes": "slide" },
+        { "testId": "layout.outside-viewport", "selectorIncludes": "drawer" },
+        { "testId": "layout.text-clipped", "selectorIncludes": "ellipsis" },
+        { "testId": "layout.text-clipped", "selectorIncludes": "carousel" },
+        { "testId": "layout.text-clipped", "selectorIncludes": "clamp" },
+        { "testId": "layout.content-overflow-fixed-height", "selectorIncludes": "clamp" }
+      ]
+    }
+  </script>
+  <script src="harness.js"></script>
+</body>
+</html>

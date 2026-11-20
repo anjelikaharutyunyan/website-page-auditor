@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>External links</title>
+</head>
+<body>
+  <main>
+    <h1>External links fixture</h1>
+    <p>Served from 127.0.0.1; links point at "localhost", a different origin on the same test server.</p>
+    <ul>
+      <li><a id="ext-ok" data-path="/tests/fixtures/clean.html">External page that exists</a></li>
+      <li><a id="ext-missing" data-path="/tests/fixtures/gone.html">External page that is gone</a></li>
+      <li><a id="ext-logout" data-path="/account/logout">External log out</a></li>
+    </ul>
+  </main>
+  <script>
+    for (const a of document.querySelectorAll("a[data-path]")) a.href = `http://localhost:${location.port}${a.dataset.path}`;
+  </script>
+</body>
+</html>

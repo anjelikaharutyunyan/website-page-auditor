@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Link defects</title>
+  <style>body { margin: 0; padding: 16px; font: 16px/1.5 system-ui, sans-serif; } li { margin: 10px 0; } a { padding: 4px 0; display: inline-block; }</style>
+</head>
+<body>
+  <main>
+    <h1>Links fixture</h1>
+    <ul>
+      <li><a id="placeholder" href="#">Placeholder link</a></li>
+      <li><a id="jsvoid" href="javascript:void(0)">Does nothing</a></li>
+      <li><a id="badfrag" href="#no-such-section">Jump to missing section</a></li>
+      <li><a id="goodfrag" href="#target">Jump to existing section</a></li>
+      <li><a id="noname" href="clean.html"><svg width="24" height="24" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg></a></li>
+      <li><a id="ambiguous" href="clean.html?ref=1">Click here</a></li>
+      <li><a id="missingpage" href="does-not-exist.html">Missing page on this site</a></li>
+      <li><a id="okpage" href="clean.html">Clean page</a></li>
+      <li><a id="logout" href="/account/logout">Log out</a></li>
+      <li><a id="external" href="https://example.invalid/page">External site</a></li>
+      <li><a id="malformed" href="https:/example.com/broken">Malformed URL</a></li>
+    </ul>
+    <h2 id="target">Existing section</h2>
+  </main>
+  <script type="application/json" id="qa-expect">
+    {
+      "categories": ["links"],
+      "options": { "checkSameOriginLinks": true, "maxLinkChecks": 10 },
+      "present": [
+        { "testId": "links.no-destination", "selectorIncludes": "placeholder" },
+        { "testId": "links.no-destination", "selectorIncludes": "jsvoid" },
+        { "testId": "links.broken-fragment", "selectorIncludes": "badfrag" },
+        { "testId": "links.no-name", "selectorIncludes": "noname" },
+        { "testId": "links.ambiguous-text", "selectorIncludes": "ambiguous" },
+        { "testId": "links.internal-http", "status": "failed", "selectorIncludes": "missingpage" },
+        { "testId": "links.malformed", "selectorIncludes": "malformed" }
+      ],
+      "absent": [
+        { "testId": "links.external", "status": "manual" },
+        { "testId": "links.broken-fragment", "selectorIncludes": "goodfrag" },
+        { "testId": "links.internal-http", "selectorIncludes": "okpage" },
+        { "testId": "links.internal-http", "selectorIncludes": "logout" }
+      ]
+    }
+  </script>
+  <script src="harness.js"></script>
+</body>
+</html>

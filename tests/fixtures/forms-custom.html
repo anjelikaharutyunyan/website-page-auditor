@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Custom validation form</title>
+  <style>
+    body { margin: 0; padding: 16px; font: 16px/1.5 system-ui, sans-serif; }
+    input, button { font: inherit; padding: 8px; margin: 4px 0; display: block; }
+    .hint { color: #b00020; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Contact us</h1>
+    <!-- No required attributes: validation is done by script, messages appear under each field. -->
+    <form id="contact" action="/api/contact" method="post" novalidate>
+      <div class="row">
+        <label for="name">Name *</label>
+        <input id="name" name="name" type="text" autocomplete="name">
+        <div class="hint" hidden></div>
+      </div>
+      <div class="row">
+        <label for="email">Email *</label>
+        <input id="email" name="email" type="email" autocomplete="email">
+        <div class="hint" hidden></div>
+      </div>
+      <button type="submit">Send</button>
+    </form>
+    <p id="done" hidden>Thank you!</p>
+  </main>
+  <script>
+    window.__sent = 0;
+    const form = document.getElementById("contact");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      let ok = true;
+      for (const row of form.querySelectorAll(".row")) {
+        const input = row.querySelector("input");
+        const hint = row.querySelector(".hint");
+        const v = input.value.trim();
+        let msg = "";
+        if (!v) msg = "Please fill in this field";
+        else if (input.type === "email" && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) msg = "Enter a valid email address";
+        hint.textContent = msg;
+        hint.hidden = !msg;
+        if (msg) ok = false;
+      }
+      if (!ok) return;
+      try {
+        await fetch(form.action, { method: "POST", body: new FormData(form) });
+        window.__sent++;
+        document.getElementById("done").hidden = false;
+      } catch {}
+    });
+  </script>
+  <script type="application/json" id="qa-expect">
+    {
+      "categories": ["forms"],
+      "options": { "formInteractive": true, "networkGuard": true },
+      "present": [
+        { "testId": "forms.interactive-validation", "status": "passed" }
+      ],
+      "absent": [
+        { "testId": "forms.required-constraint", "status": "manual" },
+        { "testId": "forms.interactive-validation", "status": "warning" },
+        { "testId": "forms.required-constraint", "status": "warning" }
+      ]
+    }
+  </script>
+  <script src="harness.js"></script>
+</body>
+</html>

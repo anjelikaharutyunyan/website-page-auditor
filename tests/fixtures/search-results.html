@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Search results</title>
+</head>
+<body>
+  <main>
+    <h1>Search results</h1>
+    <form role="search" action="search-results.html" method="get">
+      <label for="q">Search</label>
+      <input id="q" name="q" type="search">
+      <button type="submit">Search</button>
+    </form>
+    <p id="summary"></p>
+    <ul id="results"></ul>
+  </main>
+  <script>
+    const q = new URLSearchParams(location.search).get("q") || "";
+    document.getElementById("q").value = q;
+    const items = ["Test tube", "Testing kit", "Laptop", "Phone case"].filter((i) => q && i.toLowerCase().includes(q.toLowerCase()));
+    for (const i of items) {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = "#" + encodeURIComponent(i);
+      a.textContent = i;
+      li.appendChild(a);
+      document.getElementById("results").appendChild(li);
+    }
+    document.getElementById("summary").textContent = items.length ? `${items.length} results for "${q}"` : `No results found for "${q}"`;
+  </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Image defects</title>
+  <style>
+    body { margin: 0; padding: 16px; font: 16px/1.5 system-ui, sans-serif; }
+    figure { margin: 0 0 16px; }
+    .stretched { width: 200px; height: 200px; }
+    .cover { width: 200px; height: 200px; object-fit: cover; }
+    .scaled { width: 200px; height: auto; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Images fixture</h1>
+    <!-- assets/wide-400x200.png is a 2:1 raster image -->
+    <figure><img id="broken" src="does-not-exist.png" alt="Product photo" width="100" height="100"></figure>
+    <figure><img id="noalt" class="scaled" src="assets/wide-400x200.png" width="400" height="200"></figure>
+    <figure><img id="stretched" class="stretched" alt="Stretched banner" src="assets/wide-400x200.png?a" width="400" height="200"></figure>
+    <figure><img id="cover" class="cover" alt="Cropped hero" src="assets/wide-400x200.png?b" width="400" height="200"></figure>
+    <figure><img id="scaled" class="scaled" alt="Proportionally scaled" src="assets/wide-400x200.png?c" width="400" height="200"></figure>
+    <!-- SVG letterboxes (preserveAspectRatio meet) instead of stretching, so it must not count as distorted -->
+    <figure><img id="svg-square" class="stretched" alt="Logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect width='400' height='200' fill='%2386efac'/%3E%3C/svg%3E" width="400" height="200"></figure>
+    <figure><img id="filename-alt" alt="IMG_1234.jpg" class="scaled" src="assets/wide-400x200.png?d" width="400" height="200"></figure>
+  </main>
+  <script type="application/json" id="qa-expect">
+    {
+      "categories": ["images"],
+      "options": { "skipBackgroundImages": true },
+      "present": [
+        { "testId": "images.broken", "status": "failed", "selectorIncludes": "broken" },
+        { "testId": "images.missing-alt", "selectorIncludes": "noalt" },
+        { "testId": "images.distorted", "selectorIncludes": "stretched" },
+        { "testId": "images.alt-quality", "selectorIncludes": "filename-alt" }
+      ],
+      "absent": [
+        { "testId": "images.distorted", "selectorIncludes": "cover" },
+        { "testId": "images.distorted", "selectorIncludes": "scaled" },
+        { "testId": "images.distorted", "selectorIncludes": "svg-square" },
+        { "testId": "images.broken", "selectorIncludes": "scaled" }
+      ]
+    }
+  </script>
+  <script src="harness.js"></script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Website Page Auditor</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="app-header">
+    <img src="icons/main.png" alt="" class="app-logo">
+    <div class="app-title">
+      <h1>Website Page Auditor</h1>
+      <div id="pageUrl" class="page-url" title="">—</div>
+    </div>
+    <div class="header-actions">
+      <button id="openSidePanel" class="btn btn-sm" type="button" title="Keep the dashboard open while you interact with the page" data-i18n="uiOpenSidePanel" data-i18n-title="uiOpenSidePanelTitle">Open side panel</button>
+    </div>
+  </header>
+
+  <!-- Shown until the user agrees; nothing on the page is read before that. -->
+  <section id="consent" class="consent d-none" aria-labelledby="consentTitle">
+    <h2 id="consentTitle" data-i18n="uiConsentTitle">Before you audit a page</h2>
+    <p data-i18n="uiConsentIntro">Website Page Auditor audits the webpage you're viewing and helps you find and review quality issues. To do that, it has to read the page you choose to check.</p>
+    <ul>
+      <li data-i18n="uiConsentReads"><b>What it reads:</b> the page address and title, visible text, HTML structure, styles and element sizes, links, images, and form field labels and settings. It does not read what you type into form fields, passwords or cookies.</li>
+      <li data-i18n="uiConsentWhen"><b>When:</b> only on the tab where you open it, and only when you check the page, open the Search appearance tab or use an Inspect page tool.</li>
+      <li data-i18n="uiConsentWhere"><b>Where findings go:</b> they stay in this browser's temporary storage for that tab and are deleted when the tab closes or moves to another page. Nothing is sent to the developer or to any other server.</li>
+      <li data-i18n="uiConsentPdf">PDF report: findings you add to the PDF report, with a screenshot of each highlighted element, stay in this browser's temporary storage until you clear the list or close the browser, even after the tab moves to another page.</li>
+      <li data-i18n="uiConsentOptional"><b>Optional checks:</b> on by default; change them in Settings. UI tests briefly open and close tabs. Form tests use sample values but block submissions. Search sends a real query and may navigate. Same-site links use your session; external link checks require permission to access all sites.</li>
+    </ul>
+    <p><a href="privacy.html" target="_blank" rel="noopener" data-i18n="uiReadPrivacy">Read the privacy policy</a></p>
+    <div class="run-bar">
+      <button id="acceptConsent" class="btn btn-primary" type="button" data-i18n="uiAgreeContinue">Agree and continue</button>
+      <button id="declineConsent" class="btn" type="button" data-i18n="uiNotNow">Not now</button>
+    </div>
+  </section>
+
+  <div id="appBody" class="d-none">
+  <div id="accessBanner" class="banner banner-warning d-none" role="status">
+    <span id="accessText"></span>
+    <button id="grantAccess" class="btn btn-sm d-none" type="button" data-i18n="uiAllowSite">Allow access to this site</button>
+  </div>
+
+  <nav class="view-tabs" role="tablist" aria-label="Dashboard sections" data-i18n-aria="uiDashboardSections">
+    <button class="view-tab active" role="tab" aria-selected="true" data-view="results" type="button" data-i18n="uiTabAudit">Page audit</button>
+    <button class="view-tab" role="tab" aria-selected="false" data-view="images" type="button" data-i18n="uiTabImages">Images</button>
+    <button class="view-tab" role="tab" aria-selected="false" data-view="seo" type="button" data-i18n="uiTabSearchAppearance">Search appearance</button>
+    <button class="view-tab" role="tab" aria-selected="false" data-view="tools" type="button" data-i18n="uiTabInspect">Inspect page</button>
+    <button class="view-tab" role="tab" aria-selected="false" data-view="pdf" type="button"><span data-i18n="uiTabPdf">PDF report</span> <span id="pdfTabCount" class="tab-count d-none"></span></button>
+    <button class="view-tab" role="tab" aria-selected="false" data-view="settings" type="button" data-i18n="uiTabSettings">Settings</button>
+  </nav>
+
+  <main>
+    <!-- Page audit -->
+    <section id="view-results" class="view" role="tabpanel">
+      <div id="categoryGrid" class="category-grid"></div>
+
+      <div id="summary" class="summary d-none">
+        <div class="summary-cards">
+          <button class="card card-failed" data-filter-status="failed" type="button"><b id="countFailed">0</b><span data-i18n="uiIssueFound">Issue found</span></button>
+          <button class="card card-warning" data-filter-status="warning" type="button"><b id="countWarning">0</b><span data-i18n="uiPossibleIssue">Possible issue</span></button>
+          <button class="card card-manual" data-filter-status="manual" type="button"><b id="countManual">0</b><span data-i18n="uiReviewManually">Review manually</span></button>
+          <button class="card card-passed" data-filter-status="passed" type="button"><b id="countPassed">0</b><span data-i18n="uiNoIssueFound">No issue found</span></button>
+        </div>
+        <div id="severityChips" class="severity-chips"></div>
+        <div id="reportMeta" class="report-meta"></div>
+      </div>
+
+      <div id="filters" class="filters d-none">
+        <select id="filterStatus" aria-label="Filter by status" data-i18n-aria="uiFilterByStatus">
+          <option value="" data-i18n="uiAllStatuses">All statuses</option>
+          <option value="failed" data-i18n="uiIssueFound">Issue found</option>
+          <option value="warning" data-i18n="uiPossibleIssue">Possible issue</option>
+          <option value="manual" data-i18n="uiReviewManually">Review manually</option>
+          <option value="passed" data-i18n="uiNoIssueFound">No issue found</option>
+        </select>
+        <select id="filterSeverity" aria-label="Filter by severity" data-i18n-aria="uiFilterBySeverity">
+          <option value="" data-i18n="uiAllSeverities">All severities</option>
+          <option value="critical" data-i18n="uiSeverityCritical">Critical</option>
+          <option value="high" data-i18n="uiSeverityHigh">High</option>
+          <option value="medium" data-i18n="uiSeverityMedium">Medium</option>
+          <option value="low" data-i18n="uiSeverityLow">Low</option>
+        </select>
+        <button id="resetFilters" class="btn btn-sm" type="button" data-i18n="uiShowAll">Show all</button>
+      </div>
+
+      <div id="resultsList" class="results-list"></div>
+
+      <div id="emptyState" class="empty-state">
+        <p><b data-i18n="uiNotAudited">This page hasn't been audited yet.</b></p>
+        <p data-i18n="uiEmptyExplanation">Press “Check this page”, or run a single category above. Findings are grouped as Issue found, Possible issue, Review manually and No issue found. Click a finding to highlight its element on the page. Automated checks find common problems; they don't replace human review.</p>
+      </div>
+
+      <details id="limitations" class="limitations d-none">
+        <summary><span data-i18n="uiSkippedLimitations">Skipped checks and limitations</span> (<span id="limitationsCount">0</span>)</summary>
+        <ul id="limitationsList"></ul>
+      </details>
+
+      <div id="exportBar" class="export-bar d-none">
+        <label class="select-all"><input id="selectShown" type="checkbox"> <span data-i18n="uiSelectShown">Select all shown</span></label>
+        <button id="addSelected" class="btn btn-sm btn-primary" type="button" disabled></button>
+        <span class="spacer"></span>
+        <button id="clearReport" class="btn btn-sm btn-link-danger" type="button" data-i18n="uiDeleteReport">Delete this report</button>
+      </div>
+
+      <div id="progress" class="progress d-none" aria-live="polite">
+        <div class="progress-track"><span id="progressFill"></span></div>
+        <div id="progressText" class="progress-text"></div>
+      </div>
+
+      <div class="run-bar">
+        <button id="runAll" class="btn btn-primary" type="button" data-i18n="uiCheckPage">Check this page</button>
+        <button id="cancelScan" class="btn btn-danger d-none" type="button" data-i18n="uiStopChecking">Stop checking</button>
+      </div>
+    </section>
+
+    <!-- Images -->
+    <section id="view-images" class="view d-none" role="tabpanel">
+      <p class="hint" data-i18n="uiImagesHint">Natural = source pixels; rendered = on-screen size. Cropping hides parts; distortion changes proportions. Resizing is normal.</p>
+      <div id="imagesEmpty" class="empty-state"><p data-i18n="uiImagesEmpty">Run the Images category on the Page audit tab to list the images on this page.</p></div>
+      <div id="imagesSummary" class="report-meta"></div>
+      <div class="table-scroll"><table id="imagesTable" class="data-table d-none">
+        <thead><tr><th data-i18n="uiImage">Image</th><th data-i18n="uiNatural">Natural</th><th data-i18n="uiRendered">Rendered</th><th data-i18n="uiFit">Fit</th><th data-i18n="uiFileSize">File size</th><th data-i18n="uiCropping">Cropping</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+    </section>
+
+    <!-- Search appearance (SEO) -->
+    <section id="view-seo" class="view d-none" role="tabpanel">
+      <p class="hint"><b data-i18n="uiTabSearchAppearance">Search appearance</b> <span data-i18n="uiSeoHint">covers basic SEO (search engine optimization) signals: the page title, headings, image alt text, links, the Google tag and the image used in link previews.</span></p>
+      <div id="seoSummary" class="summary d-none">
+        <div class="summary-cards">
+          <button class="card card-failed" data-seo-filter="issue" type="button"><b id="seoCountIssue">0</b><span data-i18n="uiIssueFound">Issue found</span></button>
+          <button class="card card-warning" data-seo-filter="warning" type="button"><b id="seoCountWarning">0</b><span data-i18n="uiPossibleIssue">Possible issue</span></button>
+          <button class="card card-skipped" data-seo-filter="skipped" type="button"><b id="seoCountSkipped">0</b><span data-i18n="uiCouldntCompare">Couldn't compare</span></button>
+          <button class="card card-passed" data-seo-filter="passed" type="button"><b id="seoCountPassed">0</b><span data-i18n="uiNoIssueFound">No issue found</span></button>
+        </div>
+      </div>
+
+      <div id="seoFilters" class="filters d-none">
+        <select id="seoFilterStatus" aria-label="Filter search appearance checks by status" data-i18n-aria="uiFilterSearchByStatus">
+          <option value="" data-i18n="uiAllStatuses">All statuses</option>
+          <option value="issue" data-i18n="uiIssueFound">Issue found</option>
+          <option value="warning" data-i18n="uiPossibleIssue">Possible issue</option>
+          <option value="skipped" data-i18n="uiCouldntCompare">Couldn't compare</option>
+          <option value="passed" data-i18n="uiNoIssueFound">No issue found</option>
+        </select>
+        <button id="seoResetFilters" class="btn btn-sm" type="button" data-i18n="uiShowAll">Show all</button>
+      </div>
+
+      <div id="seoEmpty" class="empty-state"><p data-i18n="uiSeoEmpty">Search appearance checks run automatically every time this tab is opened.</p></div>
+      <div id="seoResults" class="d-none">
+        <div id="seoChecks" class="results-list"></div>
+        <div class="export-bar">
+          <label class="select-all"><input id="seoSelectShown" type="checkbox"> <span data-i18n="uiSelectShown">Select all shown</span></label>
+          <button id="seoAddSelected" class="btn btn-sm btn-primary" type="button" disabled></button>
+        </div>
+      </div>
+
+      <div id="seoProgress" class="progress d-none" aria-live="polite">
+        <div class="progress-track"><span id="seoProgressFill"></span></div>
+        <div id="seoProgressText" class="progress-text"></div>
+      </div>
+
+      <p id="seoMeta" class="hint"></p>
+    </section>
+
+    <!-- Inspect page -->
+    <section id="view-tools" class="view d-none" role="tabpanel">
+      <p class="hint" data-i18n="uiInspectHint">Outline tools add a temporary outline to matching elements so you can review them on the page. Nothing is saved, and “Remove all outlines” restores the page.</p>
+      <h2 class="section-title" data-i18n="uiOutlineElements">Outline elements</h2>
+      <div id="outlineTools" class="tool-grid"></div>
+      <div class="run-bar"><button id="resetAids" class="btn btn-sm" type="button" data-i18n="uiRemoveOutlines">Remove all outlines</button></div>
+    </section>
+
+    <!-- PDF report: findings collected from any number of pages -->
+    <section id="view-pdf" class="view d-none" role="tabpanel">
+      <p class="hint"><span data-i18n="uiPdfHint">Collect findings from as many pages as you like, then download them as one PDF. The list stays when you move to other pages or tabs, and is cleared when you close the browser.</span> <span data-i18n="uiPdfShotHint">When a finding points to an element, it is highlighted on the page and a screenshot of it is added under the finding.</span></p>
+      <div id="pdfEmpty" class="empty-state"><p data-i18n="uiPdfEmpty">Nothing added yet. On the Page audit or Search appearance tab, tick the findings you want and press “Add to PDF report”.</p></div>
+      <div id="pdfSummary" class="report-meta"></div>
+      <div id="pdfPages" class="results-list"></div>
+      <div class="run-bar">
+        <button id="downloadPdf" class="btn btn-primary" type="button" data-i18n="uiDownloadPdf" disabled>Download PDF</button>
+        <button id="clearPdf" class="btn btn-sm btn-link-danger" type="button" data-i18n="uiClearPdf" disabled>Clear the list</button>
+      </div>
+    </section>
+
+    <!-- Settings -->
+    <section id="view-settings" class="view d-none" role="tabpanel">
+      <details class="advanced-settings">
+        <summary data-i18n="uiAdditionalOptions">Additional audit options</summary>
+        <p class="hint" data-i18n="uiOptionsDefault">These checks are on by default. Turn off any you don't want.</p>
+        <label class="setting"><input type="checkbox" data-setting="interactiveTests"> <span><b data-i18n="uiCheckTabsFocus">Check tabs and keyboard focus</b><br><span data-i18n="uiCheckTabsFocusHelp">Temporarily opens tabs and disclosure widgets, then checks visible keyboard focus.</span></span></label>
+        <label class="setting"><input type="checkbox" data-setting="formInteractive"> <span><b data-i18n="uiCheckForms">Check form validation</b><br><span data-i18n="uiCheckFormsHelp">Tries sample values in up to five forms. Actual submissions are blocked and fields are restored.</span></span></label>
+        <label class="setting"><input type="checkbox" data-setting="searchQueryTest"> <span><b data-i18n="uiTestSearch">Test site search</b><br><span data-i18n="uiTestSearchHelp">Sends a real search request and may navigate to results.</span></span></label>
+        <label class="setting setting-indent"><span data-i18n="uiSearchWord">Search word</span> <input type="text" data-setting="searchQuery" maxlength="60"></label>
+        <label class="setting"><input type="checkbox" data-setting="checkSameOriginLinks"> <span><b data-i18n="uiCheckSameSiteLinks">Check links on this site</b><br><span data-i18n="uiCheckSameSiteLinksHelp">Uses your current site session. Logout, delete, cart, and download links are skipped.</span></span></label>
+        <label class="setting setting-indent"><span data-i18n="uiMaxLinks">Maximum links to check</span> <input type="number" data-setting="maxLinkChecks" min="0" max="100"></label>
+        <label class="setting"><input type="checkbox" data-setting="checkExternalLinks"> <span><b data-i18n="uiCheckExternalLinks">Check links to other sites</b><br><span data-i18n="uiCheckExternalLinksHelp">Sends cookie-free requests after you allow access to sites.</span></span></label>
+        <div id="externalAccessAction" class="setting setting-indent d-none">
+          <button id="grantExternalAccess" class="btn btn-xs" type="button" data-i18n="uiAllowAllSites">Allow access to all sites</button>
+          <span class="muted" data-i18n="uiRequiredExternal">Required for external link checks.</span>
+        </div>
+        <label class="setting setting-indent"><span data-i18n="uiMaxFindings">Maximum findings per check</span> <input type="number" data-setting="maxPerTest" min="5" max="200"></label>
+      </details>
+
+      <h2 class="section-title" data-i18n="uiResponsiveViewports">Responsive viewports</h2>
+      <p class="hint" data-i18n="uiResponsiveHelp">Uses Chrome’s debugger permission to emulate this tab without resizing the browser window. A brief Chrome notice may appear.</p>
+      <div id="viewportPresets" class="viewport-list"></div>
+      <form id="customViewportForm" class="custom-viewport">
+        <input id="customLabel" type="text" placeholder="Label" data-i18n-placeholder="uiLabel" maxlength="20" aria-label="Custom viewport label" data-i18n-aria="uiCustomViewportLabel">
+        <input id="customWidth" type="number" min="200" max="3840" placeholder="Width" data-i18n-placeholder="uiWidth" required aria-label="Width" data-i18n-aria="uiWidth">
+        ×
+        <input id="customHeight" type="number" min="200" max="2160" placeholder="Height" data-i18n-placeholder="uiHeight" required aria-label="Height" data-i18n-aria="uiHeight">
+        <button class="btn btn-sm" type="submit" data-i18n="uiAddSize">Add size</button>
+      </form>
+      <div id="customViewports" class="viewport-list"></div>
+
+      <h2 class="section-title" data-i18n="uiPrivacy">Privacy</h2>
+      <p class="hint"><span data-i18n="uiPrivacySummary">Audits read only the page you check. Findings stay in this browser's temporary storage for that tab and are never sent to the developer or any other server.</span> <span data-i18n="uiPrivacyPdf">Findings you add to the PDF report, and their screenshots, are kept until you clear the list or close the browser.</span> <a href="privacy.html" target="_blank" rel="noopener" data-i18n="uiPrivacyPolicy">Privacy policy</a></p>
+      <div class="run-bar">
+        <button id="withdrawConsent" class="btn btn-sm btn-link-danger" type="button" data-i18n="uiWithdrawConsent">Withdraw consent and delete all reports</button>
+      </div>
+    </section>
+  </main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/qa/qa-utils.js"></script>
+  <script src="js/finding-text.js"></script>
+  <script src="js/popup.js"></script>
+</body>
+</html>

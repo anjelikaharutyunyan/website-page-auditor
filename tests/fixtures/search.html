@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JavaScript search</title>
+  <style>body { margin: 0; padding: 16px; font: 16px/1.5 system-ui, sans-serif; } input, button { font: inherit; padding: 8px; }</style>
+</head>
+<body>
+  <main>
+    <h1>Client-side search fixture</h1>
+    <form id="search-form" role="search" action="#">
+      <label for="q">Search products</label>
+      <input id="q" name="q" type="search">
+      <button type="submit">Search</button>
+    </form>
+    <p id="status" aria-live="polite"></p>
+    <ul id="results"></ul>
+  </main>
+  <script>
+    const items = ["Test tube", "Testing kit", "Laptop", "Phone case", "Tea cup"];
+    document.getElementById("search-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const q = document.getElementById("q").value.trim().toLowerCase();
+      const hits = items.filter((i) => i.toLowerCase().includes(q));
+      const ul = document.getElementById("results");
+      ul.textContent = "";
+      for (const h of hits) {
+        const li = document.createElement("li");
+        li.textContent = h;
+        ul.appendChild(li);
+      }
+      document.getElementById("status").textContent = hits.length ? `${hits.length} results for "${q}"` : `No results for "${q}"`;
+    });
+  </script>
+  <script type="application/json" id="qa-expect">
+    {
+      "categories": ["search"],
+      "options": { "searchQueryTest": true, "searchQuery": "test" },
+      "present": [
+        { "testId": "search.controlled-query", "status": "passed" }
+      ],
+      "absent": [
+        { "testId": "search.submit-mechanism" }
+      ]
+    }
+  </script>
+  <script src="harness.js"></script>
+</body>
+</html>

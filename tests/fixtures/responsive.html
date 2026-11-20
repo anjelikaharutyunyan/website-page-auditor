@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Responsive defects</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 16px/1.5 system-ui, sans-serif; }
+    header { display: flex; justify-content: space-between; padding: 12px 16px; background: #111; color: #fff; }
+    nav a { color: #fff; margin-left: 12px; }
+    main { padding: 16px; }
+    /* Defect: fixed 600px pricing table overflows small phones. */
+    .pricing { width: 600px; display: flex; gap: 8px; }
+    .pricing div { flex: 1; border: 1px solid #999; padding: 8px; }
+    /* Fine: fluid image. */
+    img { max-width: 100%; height: auto; }
+    /* Defect: primary navigation hidden on small screens with no menu button replacement. */
+    @media (max-width: 500px) { nav { display: none; } }
+  </style>
+</head>
+<body>
+  <header><b>Brand</b><nav aria-label="Main"><a href="#a">Products</a><a href="#b">Pricing</a></nav></header>
+  <main>
+    <h1>Responsive fixture</h1>
+    <div class="pricing" id="pricing"><div>Basic</div><div>Pro</div><div>Enterprise</div></div>
+    <img alt="Fluid illustration" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='300'%3E%3Crect width='800' height='300' fill='%2393c5fd'/%3E%3C/svg%3E" width="800" height="300">
+  </main>
+  <script type="application/json" id="qa-expect">
+    {
+      "categories": ["responsive"],
+      "present": [
+        { "testId": "layout.horizontal-overflow", "status": "failed" },
+        { "testId": "responsive.essential-hidden" }
+      ]
+    }
+  </script>
+  <script src="harness.js"></script>
+</body>
+</html>

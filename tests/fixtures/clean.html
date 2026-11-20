@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clean static page</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 16px/1.5 system-ui, sans-serif; color: #111; background: #fff; }
+    header, main, footer { max-width: 960px; margin: 0 auto; padding: 16px; }
+    nav ul { display: flex; flex-wrap: wrap; gap: 16px; list-style: none; padding: 0; margin: 0; }
+    nav a { display: inline-block; padding: 8px 4px; color: #1d4ed8; }
+    a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid #1d4ed8; outline-offset: 2px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .card { border: 1px solid #ccc; border-radius: 8px; padding: 16px; }
+    img { max-width: 100%; height: auto; display: block; }
+    button { font: inherit; padding: 10px 16px; border: 1px solid #1d4ed8; background: #1d4ed8; color: #fff; border-radius: 6px; }
+    label { display: block; margin: 8px 0 4px; }
+    input { font: inherit; padding: 8px; width: 100%; max-width: 320px; border: 1px solid #555; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="clean.html">Home</a></li>
+        <li><a href="#about">About us</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <h1>Welcome to the clean fixture</h1>
+    <p>This page is intentionally well-formed. A scan should report no failed checks.</p>
+    <section id="about" class="cards" aria-labelledby="about-title">
+      <h2 id="about-title" style="grid-column: 1 / -1">About us</h2>
+      <div class="card">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect width='400' height='200' fill='%2393c5fd'/%3E%3C/svg%3E" width="400" height="200" alt="Blue banner illustration">
+        <p>Images scale proportionally inside their cards.</p>
+      </div>
+      <div class="card"><h3>Quality</h3><p>Readable text with sufficient contrast.</p></div>
+      <div class="card"><h3>Support</h3><p>Every control has a visible label and accessible name.</p></div>
+    </section>
+    <section id="contact" aria-labelledby="contact-title">
+      <h2 id="contact-title">Contact</h2>
+      <form action="#" method="post" id="contact-form">
+        <label for="name">Name (required)</label>
+        <input id="name" name="name" type="text" autocomplete="name" required aria-required="true">
+        <label for="email">Email (required)</label>
+        <input id="email" name="email" type="email" autocomplete="email" required aria-required="true">
+        <p><button type="submit">Send message</button></p>
+      </form>
+    </section>
+  </main>
+  <footer><p>&copy; 2026 Fixture Inc.</p></footer>
+  <script type="application/json" id="qa-expect">
+    {
+      "categories": ["layout", "images", "links", "interactions", "forms", "search", "accessibility", "elements"],
+      "options": { "checkSameOriginLinks": true },
+      "maxFailed": 0
+    }
+  </script>
+  <script src="harness.js"></script>
+</body>
+</html>

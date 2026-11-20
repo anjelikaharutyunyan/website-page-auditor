@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Repeated component defects</title>
+  <style>
+    body { margin: 0; padding: 16px; font: 16px/1.5 system-ui, sans-serif; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+    .product-card, .tile { border: 1px solid #ddd; padding: 8px; }
+    .product-card img, .tile img { width: 100%; height: auto; }
+    .fav, .tile button { width: 32px; height: 32px; }
+    .tiles { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Catalogue</h1>
+    <!-- Defect repeated in a component: the favourite button has no accessible name, the photo has no alt. -->
+    <div class="grid" id="catalogue"></div>
+    <!-- Same component without ids: list positions must not split the group. -->
+    <ul class="tiles" id="tiles"></ul>
+    <!-- A one-off defect elsewhere must stay a separate entry. -->
+    <button id="close-x"><svg width="16" height="16" aria-hidden="true"><rect width="16" height="16"/></svg></button>
+  </main>
+  <script>
+    const icon = '<svg width="16" height="16" aria-hidden="true"><rect width="16" height="16"/></svg>';
+    let cards = "";
+    for (let i = 1; i <= 100; i++) {
+      cards += `<div class="product-card" id="product-${i}"><img src="assets/wide-400x200.png?p=${i}" width="400" height="200"><h2>Product ${i}</h2><button class="fav" type="button">${icon}</button></div>`;
+    }
+    document.getElementById("catalogue").innerHTML = cards;
+    let tiles = "";
+    for (let i = 1; i <= 20; i++) tiles += `<li class="tile"><button type="button">${icon}</button></li>`;
+    document.getElementById("tiles").innerHTML = tiles;
+  </script>
+  <script type="application/json" id="qa-expect">
+    {
+      "categories": ["images", "interactions"],
+      "options": { "skipBackgroundImages": true, "maxPerTest": 25 },
+      "exactlyOnce": [
+        { "testId": "interactions.no-name", "selectorIncludes": "product-", "occurrences": 100 },
+        { "testId": "images.missing-alt", "selectorIncludes": "product-", "occurrences": 100 },
+        { "testId": "interactions.no-name", "selectorIncludes": "tile", "occurrences": 20 },
+        { "testId": "interactions.no-name", "selectorIncludes": "close-x", "occurrences": 1 }
+      ]
+    }
+  </script>
+  <script src="harness.js"></script>
+</body>
+</html>

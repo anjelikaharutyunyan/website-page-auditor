@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Interaction and accessibility defects</title>
+  <style>
+    body { margin: 0; padding: 16px; font: 16px/1.5 system-ui, sans-serif; }
+    .fake-btn { display: inline-block; padding: 8px 12px; background: #2563eb; color: #fff; cursor: pointer; }
+    .tiny-btn { width: 12px; height: 12px; padding: 0; border: 1px solid #333; }
+    .covered-wrap { position: relative; width: 240px; height: 60px; }
+    .covered-wrap button { position: absolute; left: 10px; top: 10px; }
+    .covered-wrap .overlay { position: absolute; inset: 0; background: rgba(255,255,255,.01); }
+    .low-contrast { color: #c0c0c0; background: #fff; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Interactions fixture</h1>
+    <div id="fake" class="fake-btn" onclick="void 0">Open details</div>
+    <button id="iconbtn"><svg width="16" height="16" aria-hidden="true"><rect width="16" height="16"/></svg></button>
+    <button id="tiny" class="tiny-btn" aria-label="Close"></button>
+    <div class="covered-wrap"><button id="covered">Covered action</button><div class="overlay"></div></div>
+    <details id="faq"><summary>Shipping FAQ</summary><p>Ships in 2 days.</p></details>
+    <button id="delete" type="button" aria-expanded="false" aria-controls="faq-panel">Delete account</button>
+    <div id="faq-panel" hidden>Danger zone</div>
+    <p class="low-contrast" id="lowc">This grey text has too little contrast against white.</p>
+    <h4 id="skipped-heading">Heading level skipped</h4>
+    <div id="dupe">one</div><div id="dupe">two</div>
+    <input id="unlabeled-field" type="text" aria-describedby="missing-description">
+  </main>
+  <script type="application/json" id="qa-expect">
+    {
+      "categories": ["interactions", "accessibility"],
+      "options": { "interactiveTests": true },
+      "present": [
+        { "testId": "interactions.non-semantic-clickable", "selectorIncludes": "fake" },
+        { "testId": "interactions.no-name", "selectorIncludes": "iconbtn" },
+        { "testId": "a11y.headings" },
+        { "testId": "a11y.duplicate-ids" },
+        { "testId": "a11y.aria-references" }
+      ],
+      "absent": [
+        { "testId": "interactions.target-size" },
+        { "testId": "interactions.cursor" },
+        { "testId": "a11y.contrast" }
+      ]
+    }
+  </script>
+  <script src="harness.js"></script>
+</body>
+</html>

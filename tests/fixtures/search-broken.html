@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Broken search</title>
+  <style>body { margin: 0; padding: 16px; font: 16px/1.5 system-ui, sans-serif; } input, button { font: inherit; padding: 8px; }</style>
+</head>
+<body>
+  <main>
+    <h1>Catalogue</h1>
+    <form id="search-form" role="search" action="#">
+      <label for="q">Search products</label>
+      <input id="q" name="q" type="search">
+      <button type="submit">Search</button>
+    </form>
+    <p id="status" aria-live="polite"></p>
+    <ul id="results"></ul>
+    <h2>All products</h2>
+    <ul><li>Laptop stand</li><li>Phone case</li></ul>
+  </main>
+  <script>
+    // Broken backend: always reports nothing found, although "laptop" exists on the page.
+    document.getElementById("search-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      document.getElementById("status").textContent = "Nothing found for your query";
+    });
+  </script>
+  <script type="application/json" id="qa-expect">
+    {
+      "categories": ["search"],
+      "options": { "searchQueryTest": true, "searchQuery": "laptop" },
+      "present": [
+        { "testId": "search.controlled-query", "status": "warning" }
+      ],
+      "absent": [
+        { "testId": "search.controlled-query", "status": "passed" }
+      ]
+    }
+  </script>
+  <script src="harness.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Script-navigating search</title>
+</head>
+<body>
+  <main>
+    <h1>Search without a form</h1>
+    <!-- No <form>: the button navigates with JavaScript, like many site headers do. -->
+    <div class="header-search">
+      <input id="site-search" type="text" placeholder="Search the site" aria-label="Search">
+      <button id="go" type="button" aria-label="Search">Go</button>
+    </div>
+  </main>
+  <script>
+    const go = () => (location.href = "search-results.html?q=" + encodeURIComponent(document.getElementById("site-search").value));
+    document.getElementById("go").addEventListener("click", go);
+    document.getElementById("site-search").addEventListener("keydown", (e) => e.key === "Enter" && go());
+  </script>
+</body>
+</html>
